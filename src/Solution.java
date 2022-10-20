@@ -1,52 +1,45 @@
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 class Solution {
 
-    public List<Integer> findSubstring(String s, String[] words) {
-        ArrayList<Integer> ans = new ArrayList<>();
-
-        HashMap<String, Integer> map = new HashMap<>();
-        for (String word : words) {
-            map.put(word, map.getOrDefault(word, 0) + 1);
-        }
-
-        int oneLength = words[0].length();
-        int sumLength = oneLength * words.length;
-
-        if (s.length() < sumLength) {
-            return ans;
-        }
-
-        for (int i = 0; i + sumLength <= s.length(); i++) {
-            if (match(s.substring(i, i + sumLength), new HashMap<>(map), oneLength)) {
-                ans.add(i);
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE) {
+            if (divisor == 1) {
+                return Integer.MIN_VALUE;
             }
-        }
-
-        return ans;
-
-    }
-
-    public boolean match(String s, Map<String, Integer> map, int oneLength) {
-        int index = 0;
-        while (index != s.length()) {
-            String st = s.substring(index, index + oneLength);
-            if (map.containsKey(st)) {
-                int leftNum = map.get(st) - 1;
-                if (leftNum != 0) {
-                    map.put(st, leftNum);
-                } else {
-                    map.remove(st);
-                }
-                index += oneLength;
-                continue;
+            if (divisor == -1) {
+                return Integer.MAX_VALUE;
             }
 
-            return false;
         }
-        return true;
+
+        boolean isNegative = ((dividend ^ divisor) >> 31 & 1) == 1;
+        if (dividend > 0) {
+            dividend = -dividend;
+        }
+        if (divisor > 0) {
+            divisor = -divisor;
+        }
+
+        // 一般情况
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(divisor);
+
+        int res = 1;
+        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
+            list.add(list.get(list.size() - 1) + list.get(list.size() - 1));
+            res <<= 1;
+        }
+
+        int ans = 0;
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (dividend <= list.get(i)) {
+                dividend -= list.get(i);
+                ans += res;
+            }
+            res >>= 1;
+        }
+        return isNegative ? -ans : ans;
     }
+
 }
