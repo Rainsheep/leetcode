@@ -1,45 +1,34 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 
 class Solution {
 
-    public int divide(int dividend, int divisor) {
-        if (dividend == Integer.MIN_VALUE) {
-            if (divisor == 1) {
-                return Integer.MIN_VALUE;
+    public void nextPermutation(int[] nums) {
+        for (int i = nums.length - 2; i >= 0; i--) {
+            for (int j = nums.length - 1; j > i; j--) {
+                if (nums[j] > nums[i]) {
+                    swap(nums, i, j);
+                    Arrays.sort(nums, i + 1, nums.length);
+                    return;
+                }
+
             }
-            if (divisor == -1) {
-                return Integer.MAX_VALUE;
-            }
-
         }
-
-        boolean isNegative = ((dividend ^ divisor) >> 31 & 1) == 1;
-        if (dividend > 0) {
-            dividend = -dividend;
-        }
-        if (divisor > 0) {
-            divisor = -divisor;
-        }
-
-        // 一般情况
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(divisor);
-
-        int res = 1;
-        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
-            list.add(list.get(list.size() - 1) + list.get(list.size() - 1));
-            res <<= 1;
-        }
-
-        int ans = 0;
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (dividend <= list.get(i)) {
-                dividend -= list.get(i);
-                ans += res;
-            }
-            res >>= 1;
-        }
-        return isNegative ? -ans : ans;
+        reverse(nums);
     }
 
+    public void reverse(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left < right) {
+            swap(nums, left, right);
+            left++;
+            right--;
+        }
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
 }
