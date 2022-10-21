@@ -1,45 +1,26 @@
+import java.util.LinkedList;
+
 class Solution {
 
-    public void nextPermutation(int[] nums) {
-        int index1 = nums.length - 2;
-        for (; index1 >= 0; index1--) {
-            if (nums[index1] < nums[index1 + 1]) {
-                break;
+    public int longestValidParentheses(String s) {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.add(0);
+
+        int ans = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                list.add(0);
+            } else {
+                if (list.size() > 1) {
+                    Integer nowNum = list.removeLast();
+                    list.set(list.size() - 1, list.get(list.size() - 1) + nowNum + 2);
+                    ans = Math.max(ans, list.get(list.size() - 1));
+                } else {
+                    list.set(0, 0);
+                }
             }
         }
 
-        if (index1 < 0) {
-            reverse(nums, 0);
-            return;
-        }
-
-        int index2 = nums.length - 1;
-        while (true) {
-            if (nums[index2] > nums[index1]) {
-                swap(nums, index2, index1);
-                break;
-            }
-            index2--;
-        }
-
-        reverse(nums, index1 + 1);
-
-    }
-
-
-    public void swap(int[] nums, int i, int j) {
-        int t = nums[i];
-        nums[i] = nums[j];
-        nums[j] = t;
-    }
-
-    public void reverse(int[] nums, int start) {
-        int left = start;
-        int right = nums.length - 1;
-        while (left < right) {
-            swap(nums, left, right);
-            left++;
-            right--;
-        }
+        return ans;
     }
 }
