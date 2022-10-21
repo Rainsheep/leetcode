@@ -1,43 +1,45 @@
-import java.util.ArrayList;
-
 class Solution {
 
-    public int divide(int dividend, int divisor) {
-        if (dividend == Integer.MIN_VALUE) {
-            if (divisor == -1) {
-                return Integer.MAX_VALUE;
-            }
-            if (divisor == 1) {
-                return dividend;
+    public void nextPermutation(int[] nums) {
+        int index1 = nums.length - 2;
+        for (; index1 >= 0; index1--) {
+            if (nums[index1] < nums[index1 + 1]) {
+                break;
             }
         }
 
-        boolean isNegative = (((dividend ^ divisor) >>> 31) & 1) == 1;
-
-        if (dividend > 0) {
-            dividend = -dividend;
+        if (index1 < 0) {
+            reverse(nums, 0);
+            return;
         }
 
-        if (divisor > 0) {
-            divisor = -divisor;
-        }
-
-        ArrayList<Integer> list = new ArrayList<>();
-        int res = 1;
-        list.add(divisor);
-        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
-            list.add(list.get(list.size() - 1) + list.get(list.size() - 1));
-            res <<= 1;
-        }
-
-        int ans = 0;
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (dividend <= list.get(i)) {
-                dividend -= list.get(i);
-                ans += res;
+        int index2 = nums.length - 1;
+        while (true) {
+            if (nums[index2] > nums[index1]) {
+                swap(nums, index2, index1);
+                break;
             }
-            res >>= 1;
+            index2--;
         }
-        return isNegative ? -ans : ans;
+
+        reverse(nums, index1 + 1);
+
+    }
+
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+
+    public void reverse(int[] nums, int start) {
+        int left = start;
+        int right = nums.length - 1;
+        while (left < right) {
+            swap(nums, left, right);
+            left++;
+            right--;
+        }
     }
 }
