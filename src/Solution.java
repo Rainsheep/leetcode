@@ -1,34 +1,49 @@
-import java.util.Arrays;
+class ListNode {
+
+    int val;
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
 
 class Solution {
 
-    public void nextPermutation(int[] nums) {
-        for (int i = nums.length - 2; i >= 0; i--) {
-            for (int j = nums.length - 1; j > i; j--) {
-                if (nums[j] > nums[i]) {
-                    swap(nums, i, j);
-                    Arrays.sort(nums, i + 1, nums.length);
-                    return;
-                }
-
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode p = head;
+        int t = k;
+        while (t-- > 0) {
+            if (p == null) {
+                return head;
             }
+            p = p.next;
         }
-        reverse(nums);
+
+        ListNode newHead = reverse(head, p);
+        head.next = reverseKGroup(p, k);
+        return newHead;
+
     }
 
-    public void reverse(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
-        while (left < right) {
-            swap(nums, left, right);
-            left++;
-            right--;
+    public ListNode reverse(ListNode head, ListNode end) {
+        ListNode pre = null;
+        ListNode curr = head;
+        ListNode next;
+        while (curr != end) {
+            next = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = next;
         }
-    }
-
-    public void swap(int[] nums, int i, int j) {
-        int t = nums[i];
-        nums[i] = nums[j];
-        nums[j] = t;
+        return pre;
     }
 }
