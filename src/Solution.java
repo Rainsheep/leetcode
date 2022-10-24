@@ -1,51 +1,39 @@
-
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
+import java.util.ArrayList;
 
 class Solution {
 
-    public ListNode reverseKGroup(ListNode head, int k) {
-        int n = k;
-        ListNode end = head;
-        while (n-- > 0) {
-            if (end == null) {
-                return head;
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE && (divisor == 1 || divisor == -1)) {
+            return divisor == 1 ? dividend : Integer.MAX_VALUE;
+        }
+
+        boolean isNegative = (((dividend ^ divisor) >> 31) & 1) == 1;
+        if (dividend > 0) {
+            dividend = -dividend;
+        }
+        if (divisor > 0) {
+            divisor = -divisor;
+        }
+
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(divisor);
+        int res = 1;
+        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
+            list.add(list.get(list.size() - 1) + list.get(list.size() - 1));
+            res <<= 1;
+        }
+
+        int ans = 0;
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (dividend > divisor) {
+                break;
             }
-            end = end.next;
+            if (dividend <= list.get(i)) {
+                dividend -= list.get(i);
+                ans += res;
+            }
+            res >>= 1;
         }
-
-        ListNode newHead = reverse(head, end);
-        head.next = reverseKGroup(end, k);
-        return newHead;
-    }
-
-    private ListNode reverse(ListNode head, ListNode end) {
-        ListNode pre = null;
-        ListNode curr = head;
-        ListNode next;
-
-        while (curr != end) {
-            next = curr.next;
-            curr.next = pre;
-            pre = curr;
-            curr = next;
-        }
-
-        return pre;
+        return isNegative ? -ans : ans;
     }
 }
