@@ -1,26 +1,31 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 class Solution {
 
-    public String countAndSay(int n) {
-        String str = "1";
-        for (int i = 1; i < n; i++) {
-            StringBuilder sb = new StringBuilder();
-            int num = 0;
-            for (int j = 0; j < str.length(); j++) {
-                if (j == 0 || str.charAt(j) == str.charAt(j - 1)) {
-                    num++;
-                    continue;
-                }
-                sb.append(num);
-                sb.append(str.charAt(j - 1));
-                num = 1;
-            }
+    List<List<Integer>> ans = new ArrayList<>();
+    LinkedList<Integer> list = new LinkedList<>();
 
-            sb.append(num);
-            sb.append(str.charAt(str.length() - 1));
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        dfs(candidates, 0, target, 0);
+        return ans;
+    }
 
-            str = sb.toString();
+    private void dfs(int[] candidates, int i, int target, int sum) {
+        if (sum == target) {
+            ans.add(new ArrayList<>(list));
+            return;
         }
 
-        return str;
+        if (sum > target || i >= candidates.length) {
+            return;
+        }
+
+        list.add(candidates[i]);
+        dfs(candidates, i, target, sum + candidates[i]);
+        list.removeLast();
+
+        dfs(candidates, i + 1, target, sum);
     }
 }
