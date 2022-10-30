@@ -1,32 +1,22 @@
 class Solution {
 
-    public boolean isMatch(String s, String p) {
-        int m = p.length();
-        int n = s.length();
-        boolean[][] dp = new boolean[m + 1][n + 1];
-        dp[0][0] = true;
-        for (int i = 1; i <= m; i++) {
-            if (p.charAt(i - 1) != '*') {
-                break;
-            }
-            dp[i][0] = true;
-        }
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (p.charAt(i - 1) == '*') {
-                    dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
-                } else {
-                    dp[i][j] = dp[i - 1][j - 1] && isMatch(p.charAt(i - 1), s.charAt(j - 1));
-                }
+    public int trap(int[] height) {
+        int n = height.length;
+        int ans = 0;
+        int leftMax = height[0];
+        int rightMax = height[height.length - 1];
+        int left = 1;
+        int right = height.length - 2;
+        while (left <= right) {
+            if (leftMax <= rightMax) {
+                leftMax = Math.max(leftMax, height[left]);
+                ans += leftMax - height[left++];
+            } else {
+                rightMax = Math.max(rightMax, height[right]);
+                ans += rightMax - height[right--];
             }
         }
-        return dp[m][n];
-    }
+        return ans;
 
-    private boolean isMatch(char c1, char c2) {
-        if (c1 == '?') {
-            return true;
-        }
-        return c1 == c2;
     }
 }
