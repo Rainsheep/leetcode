@@ -1,20 +1,31 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 class Solution {
 
-    public int jump(int[] nums) {
-        // 现在的步数
-        int step = 0;
-        // 这一步的最远距离
-        int end = 0;
-        // 下一步的最远距离
-        int maxIndex = 0;
+    List<List<Integer>> ans = new ArrayList<>();
 
-        for (int i = 0; i < nums.length - 1; i++) {
-            maxIndex = Math.max(maxIndex, i + nums[i]);
-            if (i == end) {
-                end = maxIndex;
-                step++;
+    public List<List<Integer>> permute(int[] nums) {
+        dfs(new LinkedList<>(), nums, new boolean[nums.length]);
+        return ans;
+    }
+
+    private void dfs(LinkedList<Integer> list, int[] nums, boolean[] flag) {
+        if (list.size() == nums.length) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+
+        for (int i = 0; i < flag.length; i++) {
+            if (!flag[i]) {
+                list.add(nums[i]);
+                flag[i] = true;
+                dfs(list, nums, flag);
+                flag[i] = false;
+                list.removeLast();
             }
         }
-        return step;
+
     }
 }
