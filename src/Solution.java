@@ -1,24 +1,20 @@
 class Solution {
 
-    public int firstMissingPositive(int[] nums) {
-        int n = nums.length;
-        for (int i = 0; i < nums.length; i++) {
-            while (nums[i] > 0 && nums[i] <= n && nums[i] != i + 1 && nums[i] != nums[nums[i] - 1]) {
-                swap(nums, i, nums[i] - 1);
+    public int trap(int[] height) {
+        int leftMax = height[0];
+        int rightMax = height[height.length - 1];
+        int left = 1;
+        int right = height.length - 2;
+        int ans = 0;
+        while (left <= right) {
+            if (leftMax <= rightMax) {
+                leftMax = Math.max(leftMax, height[left]);
+                ans += leftMax - height[left++];
+            } else {
+                rightMax = Math.max(rightMax, height[right]);
+                ans += rightMax - height[right--];
             }
         }
-
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] != i + 1) {
-                return i + 1;
-            }
-        }
-        return n + 1;
-    }
-
-    public void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
+        return ans;
     }
 }
