@@ -1,34 +1,24 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-
 class Solution {
 
-    List<List<Integer>> ans = new ArrayList<>();
-
-    public List<List<Integer>> permuteUnique(int[] nums) {
-        dfs(new LinkedList<>(), nums, new boolean[nums.length]);
-        return ans;
-    }
-
-    private void dfs(LinkedList<Integer> list, int[] nums, boolean[] flag) {
-        if (list.size() == nums.length) {
-            ans.add(new ArrayList<>(list));
-            return;
-        }
-        HashSet<Integer> set = new HashSet<>();
-
-        for (int i = 0; i < flag.length; i++) {
-            if (!flag[i] && !set.contains(nums[i])) {
-                set.add(nums[i]);
-                list.add(nums[i]);
-                flag[i] = true;
-                dfs(list, nums, flag);
-                flag[i] = false;
-                list.removeLast();
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                swap(matrix, i, j, j, i);
             }
         }
 
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                swap(matrix, i, j, i, n - j - 1);
+            }
+        }
+
+    }
+
+    private void swap(int[][] matrix, int x1, int y1, int x2, int y2) {
+        int temp = matrix[x1][y1];
+        matrix[x1][y1] = matrix[x2][y2];
+        matrix[x2][y2] = temp;
     }
 }
