@@ -1,24 +1,34 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 class Solution {
 
-    public void rotate(int[][] matrix) {
-        int n = matrix.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < i; j++) {
-                swap(matrix, i, j, j, i);
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<HashMap<Character, Integer>, Integer> posMap = new HashMap<>();
+        ArrayList<List<String>> ans = new ArrayList<>();
+
+        for (String str : strs) {
+            Map<Character, Integer> map = getMap(str);
+            if (posMap.containsKey(map)) {
+                ans.get(posMap.get(map)).add(str);
+            } else {
+                ArrayList<String> list = new ArrayList<>();
+                list.add(str);
+                ans.add(list);
+                posMap.put((HashMap<Character, Integer>) map, ans.size() - 1);
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n / 2; j++) {
-                swap(matrix, i, j, i, n - j - 1);
-            }
-        }
-
+        return ans;
     }
 
-    private void swap(int[][] matrix, int x1, int y1, int x2, int y2) {
-        int temp = matrix[x1][y1];
-        matrix[x1][y1] = matrix[x2][y2];
-        matrix[x2][y2] = temp;
+    private Map<Character, Integer> getMap(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1);
+        }
+        return map;
     }
 }
