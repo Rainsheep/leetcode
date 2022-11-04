@@ -1,44 +1,37 @@
-import java.util.ArrayList;
-
 class Solution {
 
-    public String multiply(String num1, String num2) {
-        int m = num2.length() - 1;
-        int n = num1.length() - 1;
-        ArrayList<Integer> list = new ArrayList<>();
-        int t = 0, num;
-        for (int i = m; i >= 0; i--) {
-            for (int j = n; j >= 0; j--) {
-                int index = m - i + n - j;
-                int old = list.size() > index ? list.get(index) : 0;
-                num = (num2.charAt(i) - '0') * (num1.charAt(j) - '0') + t + old;
-                t = num / 10;
-                num = num % 10;
-                if (list.size() > index) {
-                    list.set(index, num);
+    public boolean isMatch(String s, String p) {
+        int m = p.length();
+        int n = s.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+
+        for (int i = 1; i <= m; i++) {
+            if (p.charAt(i - 1) == '*') {
+                dp[i][0] = true;
+                continue;
+            }
+            break;
+        }
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p.charAt(i - 1) == '*') {
+                    dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
                 } else {
-                    list.add(num);
+                    dp[i][j] = dp[i - 1][j - 1] && match(p.charAt(i - 1), s.charAt(j - 1));
                 }
             }
-            if (t != 0) {
-                list.add(t);
-                t = 0;
-            }
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = list.size() - 1; i >= 0; i--) {
-            sb.append(list.get(i));
-        }
+        return dp[m][n];
 
-        int begin = 0;
-        while (begin < sb.length() && sb.charAt(begin) == '0') {
-            begin++;
-        }
-        if (begin == sb.length()) {
-            return "0";
-        }
-        return sb.substring(begin);
+    }
 
+    public boolean match(char c1, char c2) {
+        if (c1 == '?') {
+            return true;
+        }
+        return c1 == c2;
     }
 }
