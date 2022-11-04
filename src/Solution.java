@@ -1,35 +1,24 @@
 class Solution {
 
-    public int[] searchRange(int[] nums, int target) {
-        return new int[]{find(nums, target, true), find(nums, target, false)};
-    }
-
-    private int find(int[] nums, int target, boolean lower) {
-        int left = 0;
-        int right = nums.length - 1;
-        int res = -1;
-        int mid;
-        while (left <= right) {
-            mid = left + (right - left) / 2;
-            if (nums[mid] == target) {
-                res = mid;
-                if (lower) {
-                    right = mid - 1;
-                } else {
-                    left = mid + 1;
-                }
-                continue;
+    public int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] > 0 && nums[i] < n + 1 && nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
             }
-
-            if (nums[mid] > target) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
             }
         }
 
-        return res;
+        return n + 1;
+    }
 
-
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 }
