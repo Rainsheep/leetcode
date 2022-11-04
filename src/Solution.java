@@ -1,45 +1,40 @@
-import java.util.LinkedList;
-
 class Solution {
 
-    public int divide(int dividend, int divisor) {
-        boolean isNegative = (((dividend ^ divisor) >> 31) & 1) == 1;
-
-        if (dividend == Integer.MIN_VALUE) {
-            if (divisor == -1) {
-                return Integer.MAX_VALUE;
-            }
-            if (divisor == 1) {
-                return Integer.MIN_VALUE;
+    public void nextPermutation(int[] nums) {
+        int start = -1;
+        for (int i = nums.length - 1; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                start = i - 1;
+                break;
             }
         }
-        if (dividend > 0) {
-            dividend = -dividend;
-        }
-        if (divisor > 0) {
-            divisor = -divisor;
+        if (start == -1) {
+            reverse(nums, 0);
+            return;
         }
 
-        if (dividend > divisor) {
-            return 0;
-        }
-
-        LinkedList<Integer> list = new LinkedList<>();
-        list.add(divisor);
-        int res = 1;
-        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
-            list.add(list.get(list.size() - 1) + list.get(list.size() - 1));
-            res <<= 1;
-        }
-
-        int ans = 0;
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (dividend <= list.get(i)) {
-                dividend -= list.get(i);
-                ans += res;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] > nums[start]) {
+                swap(nums, start, i);
+                reverse(nums, start + 1);
+                return;
             }
-            res >>= 1;
         }
-        return isNegative ? -ans : ans;
+
+
+    }
+
+    private void reverse(int[] nums, int start) {
+        int left = start;
+        int right = nums.length - 1;
+        while (left < right) {
+            swap(nums, left++, right--);
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 }
