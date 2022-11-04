@@ -1,23 +1,37 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 class Solution {
 
-    public int maxArea(int[] height) {
-        int left = 0;
-        int right = height.length - 1;
-        int ans = area(height, left, right);
-        while (left < right) {
-            ans = Math.max(ans, area(height, left, right));
-            if (height[left] <= height[right]) {
-                left++;
-            } else {
-                right--;
+    public List<List<Integer>> threeSum(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        ArrayList<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < n - 2; i++) {
+            if (i != 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int left = i + 1;
+            int right = n - 1;
+            while (left < right) {
+                if (left != i + 1 && nums[left] == nums[left - 1]) {
+                    left++;
+                    continue;
+                }
+                int res = nums[i] + nums[left] + nums[right];
+                if (res == 0) {
+                    ans.add(List.of(nums[i], nums[left], nums[right]));
+                    left++;
+                    right--;
+                } else if (res > 0) {
+                    right--;
+                } else {
+                    left++;
+                }
             }
 
         }
-
         return ans;
-    }
-
-    private int area(int[] height, int i, int j) {
-        return (j - i) * Math.min(height[i], height[j]);
     }
 }
