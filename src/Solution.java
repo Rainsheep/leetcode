@@ -19,13 +19,33 @@ class ListNode {
 
 class Solution {
 
-    public ListNode swapPairs(ListNode head) {
-        if (head == null || head.next == null) {
-            return head;
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null) {
+            return null;
         }
-        ListNode next = head.next;
-        head.next = swapPairs(next.next);
-        next.next = head;
-        return next;
+        ListNode end = head;
+        for (int i = 0; i < k; i++) {
+            end = end.next;
+            if (i != k - 1 && end == null) {
+                return head;
+            }
+        }
+        ListNode newHead = reverse(head, end);
+        head.next = reverseKGroup(end, k);
+        return newHead;
+
+    }
+
+    public ListNode reverse(ListNode head, ListNode end) {
+        ListNode pre = null;
+        ListNode next;
+        ListNode cur = head;
+        while (cur != end) {
+            next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
     }
 }
