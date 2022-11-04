@@ -1,24 +1,38 @@
 class Solution {
 
-    public void rotate(int[][] matrix) {
-        int n = matrix.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < i; j++) {
-                swap(matrix, i, j, j, i);
+    public boolean isMatch(String s, String p) {
+        int m = p.length();
+        int n = s.length();
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+        for (int i = 1; i <= m; i++) {
+            if (i % 2 == 0) {
+                if (p.charAt(i - 1) == '*') {
+                    dp[i][0] = true;
+                } else {
+                    break;
+                }
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n / 2; j++) {
-                swap(matrix, i, j, i, n - 1 - j);
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (p.charAt(i - 1) == '*') {
+                    dp[i][j] = dp[i - 2][j] || dp[i][j - 1] && match(p.charAt(i - 2), s.charAt(j - 1));
+                } else {
+                    dp[i][j] = dp[i - 1][j - 1] && match(p.charAt(i - 1), s.charAt(j - 1));
+                }
+
             }
         }
+        return dp[m][n];
 
     }
 
-    private void swap(int[][] matrix, int x1, int y1, int x2, int y2) {
-        int temp = matrix[x1][y1];
-        matrix[x1][y1] = matrix[x2][y2];
-        matrix[x2][y2] = temp;
+    private boolean match(char c1, char c2) {
+        if (c1 == '.') {
+            return true;
+        }
+        return c1 == c2;
     }
 }
