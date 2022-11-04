@@ -1,37 +1,23 @@
 class Solution {
 
-    public boolean isMatch(String s, String p) {
-        int m = p.length();
-        int n = s.length();
-        boolean[][] dp = new boolean[m + 1][n + 1];
-        dp[0][0] = true;
+    public int jump(int[] nums) {
+        int step = 0;
+        int end = 0;
+        // next step end index
+        int max = nums[0];
 
-        for (int i = 1; i <= m; i++) {
-            if (p.charAt(i - 1) == '*') {
-                dp[i][0] = true;
-                continue;
+        for (int i = 0; i < nums.length - 1; i++) {
+            max = Math.max(max, i + nums[i]);
+            if (i == end) {
+                end = max;
+                step++;
             }
-            break;
+
         }
-
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (p.charAt(i - 1) == '*') {
-                    dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
-                } else {
-                    dp[i][j] = dp[i - 1][j - 1] && match(p.charAt(i - 1), s.charAt(j - 1));
-                }
-            }
-        }
-
-        return dp[m][n];
-
+        return step;
     }
 
-    public boolean match(char c1, char c2) {
-        if (c1 == '?') {
-            return true;
-        }
-        return c1 == c2;
+    public static void main(String[] args) {
+        new Solution().jump(new int[]{1, 1, 1, 1});
     }
 }
