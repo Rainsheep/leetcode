@@ -1,38 +1,23 @@
 class Solution {
 
-    public boolean isMatch(String s, String p) {
-        int m = p.length();
-        int n = s.length();
-        boolean[][] dp = new boolean[m + 1][n + 1];
-        dp[0][0] = true;
-        for (int i = 1; i <= m; i++) {
-            if (i % 2 == 0) {
-                if (p.charAt(i - 1) == '*') {
-                    dp[i][0] = true;
-                } else {
-                    break;
-                }
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int ans = area(height, left, right);
+        while (left < right) {
+            ans = Math.max(ans, area(height, left, right));
+            if (height[left] <= height[right]) {
+                left++;
+            } else {
+                right--;
             }
+
         }
 
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (p.charAt(i - 1) == '*') {
-                    dp[i][j] = dp[i - 2][j] || dp[i][j - 1] && match(p.charAt(i - 2), s.charAt(j - 1));
-                } else {
-                    dp[i][j] = dp[i - 1][j - 1] && match(p.charAt(i - 1), s.charAt(j - 1));
-                }
-
-            }
-        }
-        return dp[m][n];
-
+        return ans;
     }
 
-    private boolean match(char c1, char c2) {
-        if (c1 == '.') {
-            return true;
-        }
-        return c1 == c2;
+    private int area(int[] height, int i, int j) {
+        return (j - i) * Math.min(height[i], height[j]);
     }
 }
