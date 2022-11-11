@@ -1,23 +1,18 @@
 class Solution {
 
-    public int totalNQueens(int n) {
-        return dfs(n, 0, 0, 0, 0);
-    }
-
-    private int dfs(int n, int row, int colFlag, int slashFlag, int backSlashFlag) {
-        if (row == n) {
-            return 1;
+    public int maxSubArray(int[] nums) {
+        int maxElem = nums[0];
+        int max = 0;
+        int sum = 0;
+        for (int num : nums) {
+            maxElem = Math.max(num, maxElem);
+            if (sum < 0) {
+                sum = 0;
+            }
+            sum += num;
+            max = Math.max(max, sum);
         }
-        int ans = 0;
-        int usablePosition = ((1 << n) - 1) & ~(colFlag | slashFlag | backSlashFlag);
-        while (usablePosition != 0) {
-            int position = usablePosition & -usablePosition;
-            ans += dfs(n, row + 1, colFlag | position, (slashFlag | position) >> 1, (backSlashFlag | position) << 1);
-            usablePosition = usablePosition & (usablePosition - 1);
 
-        }
-        return ans;
+        return maxElem >= 0 ? max : maxElem;
     }
-
-
 }
