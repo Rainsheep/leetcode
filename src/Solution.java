@@ -4,6 +4,22 @@ import java.util.Comparator;
 
 class Solution {
 
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int index = Arrays.binarySearch(intervals, newInterval, Comparator.comparingInt(value -> value[0]));
+        if (index < 0) {
+            index = -index - 1;
+        }
+        int[][] res = new int[intervals.length + 1][2];
+        for (int i = 0; i < index; i++) {
+            res[i] = intervals[i];
+        }
+        res[index] = newInterval;
+        for (int i = index; i < intervals.length; i++) {
+            res[i + 1] = intervals[i];
+        }
+        return merge(res);
+    }
+
     public int[][] merge(int[][] intervals) {
         Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
         ArrayList<int[]> res = new ArrayList<>();
