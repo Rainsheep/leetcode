@@ -1,23 +1,28 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+
 class Solution {
 
-    public int totalNQueens(int n) {
-        return dfs(n, 0, 0, 0, 0);
-    }
-
-    private int dfs(int n, int row, int colFlag, int slashFlag, int backSlashFlag) {
-        if (row == n) {
-            return 1;
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        ArrayList<int[]> res = new ArrayList<>();
+        int begin = intervals[0][0];
+        int end = intervals[0][1];
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] > end) {
+                res.add(new int[]{begin, end});
+                begin = intervals[i][0];
+                end = intervals[i][1];
+            } else {
+                end = Math.max(end, intervals[i][1]);
+            }
         }
-        int usablePosition = (1 << n) - 1 & ~(colFlag | slashFlag | backSlashFlag);
-        int ans = 0;
-        while (usablePosition != 0) {
-            int position = usablePosition & -usablePosition;
-            ans += dfs(n, row + 1, colFlag | position, (slashFlag | position) >> 1, (backSlashFlag | position) << 1);
-            usablePosition &= usablePosition - 1;
+        res.add(new int[]{begin, end});
+        int[][] ans = new int[res.size()][2];
+        for (int i = 0; i < res.size(); i++) {
+            ans[i] = res.get(i);
         }
-
         return ans;
     }
-
-
 }
