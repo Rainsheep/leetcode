@@ -1,37 +1,44 @@
+import java.util.LinkedList;
+import java.util.List;
+
 class Solution {
 
-    int[][] ans;
-    int n;
-    int[][] dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    int k = 0;
+    private static int[] mut;
 
-    public int[][] generateMatrix(int n) {
-        this.n = n;
-        ans = new int[n][n];
-        int[] nowIndex = {0, 0};
-        for (int i = 0; i < n * n; i++) {
-            if (i != 0) {
-                nowIndex = nextIndex(nowIndex[0], nowIndex[1]);
-            }
+    public String getPermutation(int n, int k) {
+        mut(n);
 
-            ans[nowIndex[0]][nowIndex[1]] = i + 1;
+        LinkedList<Integer> list = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            list.add(i + 1);
         }
-        return ans;
-
+        return fun(list, k);
     }
 
-    private int[] nextIndex(int x, int y) {
-        int nextX = x + dir[k][0];
-        int nextY = y + dir[k][1];
-        if (checkIndex(nextX, nextY)) {
-            return new int[]{nextX, nextY};
+    private String fun(List<Integer> list, int k) {
+        int n = list.size();
+        if (n == 1) {
+            return list.get(0) + "";
         }
-        k = (k + 1) % 4;
-        return new int[]{x + dir[k][0], y + dir[k][1]};
+        int perNum = mut[n] / n;
+
+        int index = (k - 1) / perNum;
+        Integer ret = list.get(index);
+        list.remove(index);
+
+        return ret + fun(list, k - index * perNum);
     }
 
-    private boolean checkIndex(int x, int y) {
-        return x >= 0 && x < n && y >= 0 && y < n && ans[x][y] == 0;
+    private void mut(int n) {
+        mut = new int[n + 1];
+        int ret = 1;
+        for (int i = 1; i <= n; i++) {
+            ret *= i;
+            mut[i] = ret;
+        }
     }
 
+    public static void main(String[] args) {
+        System.out.println(new Solution().getPermutation(1, 1));
+    }
 }
