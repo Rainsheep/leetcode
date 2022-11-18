@@ -1,56 +1,16 @@
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
-
 class Solution {
 
-    public ListNode rotateRight(ListNode head, int k) {
-        if (head == null) {
-            return null;
+    public int uniquePaths(int m, int n) {
+        int[] dp = new int[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (j == 0 || i == 0) {
+                    dp[j] = 1;
+                    continue;
+                }
+                dp[j] += dp[j - 1];
+            }
         }
-        int len = length(head);
-        k = k % len;
-        if (k == 0) {
-            return head;
-        }
-        ListNode p = head;
-
-        while (k-- > 0) {
-            p = p.next;
-        }
-        ListNode q = head;
-
-        while (p.next != null) {
-            q = q.next;
-            p = p.next;
-        }
-        ListNode ret = q.next;
-        q.next = null;
-        p.next = head;
-        return ret;
-    }
-
-    private int length(ListNode q) {
-        ListNode p = q;
-        int ret = 0;
-        while (p != null) {
-            ret++;
-            p = p.next;
-        }
-        return ret;
+        return dp[n - 1];
     }
 }
