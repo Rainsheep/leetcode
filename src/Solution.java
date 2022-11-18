@@ -1,44 +1,56 @@
-import java.util.LinkedList;
-import java.util.List;
+class ListNode {
+
+    int val;
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
 
 class Solution {
 
-    private static int[] mut;
-
-    public String getPermutation(int n, int k) {
-        mut(n);
-
-        LinkedList<Integer> list = new LinkedList<>();
-        for (int i = 0; i < n; i++) {
-            list.add(i + 1);
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null) {
+            return null;
         }
-        return fun(list, k);
+        int len = length(head);
+        k = k % len;
+        if (k == 0) {
+            return head;
+        }
+        ListNode p = head;
+
+        while (k-- > 0) {
+            p = p.next;
+        }
+        ListNode q = head;
+
+        while (p.next != null) {
+            q = q.next;
+            p = p.next;
+        }
+        ListNode ret = q.next;
+        q.next = null;
+        p.next = head;
+        return ret;
     }
 
-    private String fun(List<Integer> list, int k) {
-        int n = list.size();
-        if (n == 1) {
-            return list.get(0) + "";
+    private int length(ListNode q) {
+        ListNode p = q;
+        int ret = 0;
+        while (p != null) {
+            ret++;
+            p = p.next;
         }
-        int perNum = mut[n] / n;
-
-        int index = (k - 1) / perNum;
-        Integer ret = list.get(index);
-        list.remove(index);
-
-        return ret + fun(list, k - index * perNum);
-    }
-
-    private void mut(int n) {
-        mut = new int[n + 1];
-        int ret = 1;
-        for (int i = 1; i <= n; i++) {
-            ret *= i;
-            mut[i] = ret;
-        }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new Solution().getPermutation(1, 1));
+        return ret;
     }
 }
