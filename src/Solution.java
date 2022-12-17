@@ -1,36 +1,24 @@
 class Solution {
 
-    public int romanToInt(String s) {
-        int res = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (i + 1 < s.length() && getValue(s.charAt(i)) < getValue(s.charAt(i + 1))) {
-                res -= getValue(s.charAt(i));
-            } else {
-                res += getValue(s.charAt(i));
-            }
+    public String longestCommonPrefix(String[] strs) {
+        String res = strs[0];
+        for (String str : strs) {
+            res = getPublicPre(res, str);
         }
         return res;
-
     }
 
-    private int getValue(char ch) {
-        switch (ch) {
-            case 'I':
-                return 1;
-            case 'V':
-                return 5;
-            case 'X':
-                return 10;
-            case 'L':
-                return 50;
-            case 'C':
-                return 100;
-            case 'D':
-                return 500;
-            case 'M':
-                return 1000;
-            default:
-                return 0;
+    public String getPublicPre(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        while (index < a.length() && index < b.length()) {
+            if (a.charAt(index) == b.charAt(index)) {
+                sb.append(a.charAt(index++));
+            } else {
+                break;
+            }
         }
+
+        return sb.toString();
     }
 }
