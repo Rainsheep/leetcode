@@ -1,47 +1,52 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class Solution {
 
-    ArrayList<String> ans = new ArrayList<>();
-    List<String> chars;
-
-    public List<String> letterCombinations(String digits) {
-        if (digits.equals("")) {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (nums.length < 4) {
             return ans;
         }
-        chars = new ArrayList<String>() {
-            {
-                add("");
-                add("");
-                add("abc");
-                add("def");
-                add("ghi");
-                add("jkl");
-                add("mno");
-                add("pqrs");
-                add("tuv");
-                add("wxyz");
+
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length - 3; i++) {
+            if (i != 0 && nums[i] == nums[i - 1]) {
+                continue;
             }
-        };
-        dfs(digits, 0, new StringBuilder());
+            for (int j = i + 1; j < nums.length - 2; j++) {
+                if (j != i + 1 && nums[j] == nums[j - 1]) {
+                    continue;
+                }
+
+                int left = j + 1;
+                int right = nums.length - 1;
+
+                while (left < right) {
+                    if (left != j + 1 && nums[left] == nums[left - 1]) {
+                        left++;
+                        continue;
+                    }
+
+                    long sum = (long) nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        ans.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                        left++;
+                        right--;
+                    } else if (sum > target) {
+                        right--;
+                    } else {
+                        left++;
+                    }
+                }
+
+            }
+        }
+
         return ans;
 
     }
 
-    private void dfs(String digits, int index, StringBuilder sb) {
-        if (index == digits.length()) {
-            ans.add(new String(sb));
-            return;
-        }
-
-        int t = digits.charAt(index) - '0';
-        String s = chars.get(t);
-        for (int i = 0; i < s.length(); i++) {
-            sb.append(s.charAt(i));
-            dfs(digits, index + 1, sb);
-            sb.deleteCharAt(sb.length() - 1);
-        }
-
-    }
 }
