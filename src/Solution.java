@@ -1,46 +1,20 @@
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
+import java.util.HashMap;
 
 class Solution {
 
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        int t = 0;
-        ListNode head = new ListNode();
-        ListNode p = head;
-        while (l1 != null || l2 != null) {
-            int num1 = l1 != null ? l1.val : 0;
-            int num2 = l2 != null ? l2.val : 0;
-            int num = num1 + num2 + t;
-            t = num / 10;
-            p.next = new ListNode(num % 10);
-            p = p.next;
-            if (l1 != null) {
-                l1 = l1.next;
-            }
-            if (l2 != null) {
-                l2 = l2.next;
-            }
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int ret = 0;
+        int beginIndex = 1;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 1; i <= n; i++) {
+            char c = s.charAt(i - 1);
+            Integer oldIndex = map.getOrDefault(c, 0);
+            beginIndex = Math.max(beginIndex, oldIndex + 1);
+            ret = Math.max(ret, i - beginIndex + 1);
+            map.put(c, i);
         }
-        if (t != 0) {
-            p.next = new ListNode(t);
-        }
-
-        return head.next;
+        return ret;
 
     }
 }
