@@ -1,82 +1,36 @@
 class Solution {
 
-    public String intToRoman(int num) {
-        StringBuilder sb = new StringBuilder();
-        while (num > 0) {
-            if (num >= 1000) {
-                num -= 1000;
-                sb.append('M');
-                continue;
+    public int romanToInt(String s) {
+        int res = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (i + 1 < s.length() && getValue(s.charAt(i)) < getValue(s.charAt(i + 1))) {
+                res -= getValue(s.charAt(i));
+            } else {
+                res += getValue(s.charAt(i));
             }
-            if (num >= 900) {
-                num -= 900;
-                sb.append("CM");
-                continue;
-            }
-            if (num >= 500) {
-                num -= 500;
-                sb.append('D');
-                continue;
-            }
-
-            if (num >= 400) {
-                num -= 400;
-                sb.append("CD");
-                continue;
-            }
-
-            if (num >= 100) {
-                num -= 100;
-                sb.append('C');
-                continue;
-            }
-
-            if (num >= 90) {
-                num -= 90;
-                sb.append("XC");
-                continue;
-            }
-
-            if (num >= 50) {
-                num -= 50;
-                sb.append('L');
-                continue;
-            }
-
-            if (num >= 40) {
-                num -= 40;
-                sb.append("XL");
-                continue;
-            }
-
-            if (num >= 10) {
-                num -= 10;
-                sb.append('X');
-                continue;
-            }
-
-            if (num >= 9) {
-                num -= 9;
-                sb.append("IX");
-                continue;
-            }
-
-            if (num >= 5) {
-                num -= 5;
-                sb.append('V');
-                continue;
-            }
-
-            if (num == 4) {
-                num -= 4;
-                sb.append("IV");
-                continue;
-            }
-
-            num -= 1;
-            sb.append('I');
         }
+        return res;
 
-        return sb.toString();
+    }
+
+    private int getValue(char ch) {
+        switch (ch) {
+            case 'I':
+                return 1;
+            case 'V':
+                return 5;
+            case 'X':
+                return 10;
+            case 'L':
+                return 50;
+            case 'C':
+                return 100;
+            case 'D':
+                return 500;
+            case 'M':
+                return 1000;
+            default:
+                return 0;
+        }
     }
 }
