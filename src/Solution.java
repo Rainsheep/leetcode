@@ -1,41 +1,42 @@
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
-
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
 
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode head = new ListNode();
-        ListNode p = head;
-        while (list1 != null || list2 != null) {
-            if (list1 == null || list2 != null && list2.val <= list1.val) {
-                p.next = list2;
-                p = p.next;
-                list2 = list2.next;
-                p.next = null;
-                continue;
-            }
+    List<String> ans = new ArrayList<>();
+    int n;
+    int left;
+    int right;
+    StringBuilder sb = new StringBuilder();
 
-            p.next = list1;
-            p = p.next;
-            list1 = list1.next;
-            p.next = null;
+    public List<String> generateParenthesis(int n) {
+        this.n = n;
+        dfs(sb);
+        return ans;
+    }
+
+    public void dfs(StringBuilder sb) {
+        if (sb.length() == 2 * n) {
+            ans.add(sb.toString());
+            return;
         }
-        return head.next;
+
+        if (left < n) {
+            sb.append('(');
+            left++;
+            dfs(sb);
+
+            sb.deleteCharAt(sb.length() - 1);
+            left--;
+        }
+
+        if (right < left) {
+            sb.append(')');
+            right++;
+            dfs(sb);
+
+            sb.deleteCharAt(sb.length() - 1);
+            right--;
+        }
     }
 }
