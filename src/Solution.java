@@ -1,43 +1,22 @@
 class Solution {
 
-    public String longestPalindrome(String s) {
-        int n = s.length();
-        String res = "";
-        for (int i = 0; i < n; i++) {
-            String ret = fun(s, i);
-            if (ret.length() > res.length()) {
-                res = ret;
+    public String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < numRows; i++) {
+            int index = i;
+            while (index < s.length()) {
+                sb.append(s.charAt(index));
+                if (i != 0 && i != numRows - 1 && index + 2 * numRows - 2 * i - 2 < s.length()) {
+                    sb.append(s.charAt(index + 2 * numRows - 2 * i - 2));
+                }
+                index += 2 * numRows - 2;
             }
         }
-        return res;
 
-    }
+        return sb.toString();
 
-    public String fun(String s, int index) {
-        int len = 1;
-        int left = index - 1;
-        int right = index + 1;
-        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-            left--;
-            right++;
-            len++;
-        }
-        String ret1 = s.substring(index - len + 1, index + len);
-
-        len = 0;
-        left = index;
-        right = index + 1;
-        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-            left--;
-            right++;
-            len++;
-        }
-        String ret2 = s.substring(index - len + 1, index + len + 1);
-        return ret1.length() >= ret2.length() ? ret1 : ret2;
-
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new Solution().longestPalindrome("cbbd"));
     }
 }
