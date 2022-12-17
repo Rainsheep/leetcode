@@ -1,28 +1,41 @@
-import java.util.LinkedList;
+class ListNode {
+
+    int val;
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
 
 class Solution {
 
-    public boolean isValid(String s) {
-        LinkedList<Character> stack = new LinkedList<>();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (isLeft(c)) {
-                stack.add(c);
-            } else if (!stack.isEmpty() && isMatch(stack.getLast(), c)) {
-                stack.removeLast();
-            } else {
-                return false;
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode head = new ListNode();
+        ListNode p = head;
+        while (list1 != null || list2 != null) {
+            if (list1 == null || list2 != null && list2.val <= list1.val) {
+                p.next = list2;
+                p = p.next;
+                list2 = list2.next;
+                p.next = null;
+                continue;
             }
+
+            p.next = list1;
+            p = p.next;
+            list1 = list1.next;
+            p.next = null;
         }
-
-        return stack.isEmpty();
-    }
-
-    public boolean isMatch(char left, char right) {
-        return left == '(' && right == ')' || left == '[' && right == ']' || left == '{' && right == '}';
-    }
-
-    public boolean isLeft(char c) {
-        return c == '(' || c == '[' || c == '{';
+        return head.next;
     }
 }
