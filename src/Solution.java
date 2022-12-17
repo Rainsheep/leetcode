@@ -1,16 +1,15 @@
+import java.util.HashMap;
+
 class Solution {
 
-    public int uniquePaths(int m, int n) {
-        int[] dp = new int[n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (j == 0 || i == 0) {
-                    dp[j] = 1;
-                    continue;
-                }
-                dp[j] += dp[j - 1];
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {
+                return new int[]{map.get(target - nums[i]), i};
             }
+            map.put(nums[i], i);
         }
-        return dp[n - 1];
+        return new int[0];
     }
 }
