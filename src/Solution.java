@@ -1,46 +1,28 @@
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
+import java.util.LinkedList;
 
 class Solution {
 
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode now = head;
-
-        ListNode pre = new ListNode();
-        pre.next = now;
-
-        ListNode p = head;
-
-        int k = n + 1;
-        while (k-- > 1) {
-            p = p.next;
+    public boolean isValid(String s) {
+        LinkedList<Character> stack = new LinkedList<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (isLeft(c)) {
+                stack.add(c);
+            } else if (!stack.isEmpty() && isMatch(stack.getLast(), c)) {
+                stack.removeLast();
+            } else {
+                return false;
+            }
         }
 
-        while (p != null) {
-            p = p.next;
-            now = now.next;
-            pre = pre.next;
-        }
+        return stack.isEmpty();
+    }
 
-        if (pre.next == head) {
-            return head.next;
-        }
-        pre.next = pre.next.next;
-        return head;
+    public boolean isMatch(char left, char right) {
+        return left == '(' && right == ')' || left == '[' && right == ']' || left == '{' && right == '}';
+    }
+
+    public boolean isLeft(char c) {
+        return c == '(' || c == '[' || c == '{';
     }
 }
