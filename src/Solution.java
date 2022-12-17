@@ -1,35 +1,47 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
 
-    public int threeSumClosest(int[] nums, int target) {
-        Arrays.sort(nums);
-        int ans = Integer.MAX_VALUE;
-        for (int i = 0; i < nums.length; i++) {
-            if (i != 0 && nums[i] == nums[i - 1]) {
-                continue;
-            }
-            int j = i + 1;
-            int k = nums.length - 1;
-            while (k > j) {
-                if (j != i + 1 && nums[j] == nums[j - 1]) {
-                    j++;
-                    continue;
-                }
+    ArrayList<String> ans = new ArrayList<>();
+    List<String> chars;
 
-                int t = nums[i] + nums[j] + nums[k];
-                if (Math.abs(target - t) < Math.abs(target - ans)) {
-                    ans = t;
-                }
-                if (t >= target) {
-                    k--;
-                } else {
-                    j++;
-                }
+    public List<String> letterCombinations(String digits) {
+        if (digits.equals("")) {
+            return ans;
+        }
+        chars = new ArrayList<String>() {
+            {
+                add("");
+                add("");
+                add("abc");
+                add("def");
+                add("ghi");
+                add("jkl");
+                add("mno");
+                add("pqrs");
+                add("tuv");
+                add("wxyz");
             }
+        };
+        dfs(digits, 0, new StringBuilder());
+        return ans;
+
+    }
+
+    private void dfs(String digits, int index, StringBuilder sb) {
+        if (index == digits.length()) {
+            ans.add(new String(sb));
+            return;
         }
 
-        return ans;
+        int t = digits.charAt(index) - '0';
+        String s = chars.get(t);
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            dfs(digits, index + 1, sb);
+            sb.deleteCharAt(sb.length() - 1);
+        }
 
     }
 }
