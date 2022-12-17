@@ -1,12 +1,10 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 class Solution {
 
-    public List<List<Integer>> threeSum(int[] nums) {
+    public int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
-        ArrayList<List<Integer>> ans = new ArrayList<>();
+        int ans = Integer.MAX_VALUE;
         for (int i = 0; i < nums.length; i++) {
             if (i != 0 && nums[i] == nums[i - 1]) {
                 continue;
@@ -20,11 +18,10 @@ class Solution {
                 }
 
                 int t = nums[i] + nums[j] + nums[k];
-                if (t == 0) {
-                    ans.add(List.of(nums[i], nums[j], nums[k]));
-                    k--;
-                    j++;
-                } else if (t > 0) {
+                if (Math.abs(target - t) < Math.abs(target - ans)) {
+                    ans = t;
+                }
+                if (t >= target) {
                     k--;
                 } else {
                     j++;
