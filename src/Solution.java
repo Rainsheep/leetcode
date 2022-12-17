@@ -1,22 +1,18 @@
 class Solution {
 
-    public String convert(String s, int numRows) {
-        if (numRows == 1) {
-            return s;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < numRows; i++) {
-            int index = i;
-            while (index < s.length()) {
-                sb.append(s.charAt(index));
-                if (i != 0 && i != numRows - 1 && index + 2 * numRows - 2 * i - 2 < s.length()) {
-                    sb.append(s.charAt(index + 2 * numRows - 2 * i - 2));
-                }
-                index += 2 * numRows - 2;
+    public int reverse(int x) {
+        int res = 0;
+        while (x != 0) {
+            int tmp = x % 10;
+            x = x / 10;
+            if (res > 214748364 || res == 214748364 && tmp > 7) {
+                return 0;
             }
+            if (res < -214748364 || res == -214748364 && tmp < -8) {
+                return 0;
+            }
+            res = res * 10 + tmp;
         }
-
-        return sb.toString();
-
+        return res;
     }
 }
