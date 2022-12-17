@@ -1,24 +1,38 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 class Solution {
 
-    public String longestCommonPrefix(String[] strs) {
-        String res = strs[0];
-        for (String str : strs) {
-            res = getPublicPre(res, str);
-        }
-        return res;
-    }
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        ArrayList<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i != 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            int j = i + 1;
+            int k = nums.length - 1;
+            while (k > j) {
+                if (j != i + 1 && nums[j] == nums[j - 1]) {
+                    j++;
+                    continue;
+                }
 
-    public String getPublicPre(String a, String b) {
-        StringBuilder sb = new StringBuilder();
-        int index = 0;
-        while (index < a.length() && index < b.length()) {
-            if (a.charAt(index) == b.charAt(index)) {
-                sb.append(a.charAt(index++));
-            } else {
-                break;
+                int t = nums[i] + nums[j] + nums[k];
+                if (t == 0) {
+                    ans.add(List.of(nums[i], nums[j], nums[k]));
+                    k--;
+                    j++;
+                } else if (t > 0) {
+                    k--;
+                } else {
+                    j++;
+                }
             }
         }
 
-        return sb.toString();
+        return ans;
+
     }
 }
