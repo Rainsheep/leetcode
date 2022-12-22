@@ -1,62 +1,36 @@
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
+import java.util.ArrayList;
 
 class Solution {
 
-    public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode kthElem = findKthElem(head, k);
-        if (kthElem == null) {
-            return head;
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+        boolean isNegative = (((dividend ^ divisor) >> 31) & 1) == 1;
+        if (dividend > 0) {
+            dividend = -dividend;
+        }
+        if (divisor > 0) {
+            divisor = -divisor;
         }
 
-        ListNode next = kthElem.next;
-        reverse(head, kthElem);
-        head.next = reverseKGroup(next, k);
-        return kthElem;
-    }
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(divisor);
+        int num = 1;
+        while (dividend - divisor <= divisor) {
+            list.add(divisor << 1);
+            num <<= 1;
+            divisor <<= 1;
+        }
 
-    private ListNode findKthElem(ListNode head, int k) {
-        while (k-- > 1) {
-            if (head == null) {
-                break;
+        int ans = 0;
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (dividend <= list.get(i)) {
+                dividend -= list.get(i);
+                ans += num;
             }
-            head = head.next;
+            num >>= 1;
         }
-        return head;
-    }
-
-    private ListNode reverse(ListNode head, ListNode end) {
-        if (head == null || head == end) {
-            return head;
-        }
-        ListNode newEnd = end.next;
-
-        ListNode pre = null;
-        ListNode now = head;
-        ListNode next = head.next;
-        while (now != newEnd) {
-            now.next = pre;
-            pre = now;
-            now = next;
-            if (now != null) {
-                next = now.next;
-            }
-        }
-        return pre;
+        return isNegative ? -ans : ans;
     }
 }
