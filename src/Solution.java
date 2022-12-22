@@ -1,6 +1,3 @@
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
 class ListNode {
 
     int val;
@@ -21,27 +18,16 @@ class ListNode {
 
 class Solution {
 
-    public ListNode mergeKLists(ListNode[] lists) {
-        if (lists == null || lists.length == 0) {
+    public ListNode swapPairs(ListNode head) {
+        if (head == null) {
             return null;
         }
-        PriorityQueue<ListNode> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.val));
-        for (ListNode list : lists) {
-            if (list != null) {
-                queue.add(list);
-            }
+        ListNode node2 = head.next;
+        if (node2 == null) {
+            return head;
         }
-        ListNode head = new ListNode();
-        ListNode p = head;
-        while (!queue.isEmpty()) {
-            ListNode poll = queue.poll();
-            p.next = poll;
-            p = p.next;
-            poll = poll.next;
-            if (poll != null) {
-                queue.add(poll);
-            }
-        }
-        return head.next;
+        head.next = swapPairs(node2.next);
+        node2.next = head;
+        return node2;
     }
 }
