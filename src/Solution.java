@@ -1,42 +1,47 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+class ListNode {
+
+    int val;
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
 
 class Solution {
 
-    List<String> ans = new ArrayList<>();
-    int n;
-    int left;
-    int right;
-    StringBuilder sb = new StringBuilder();
-
-    public List<String> generateParenthesis(int n) {
-        this.n = n;
-        dfs(sb);
-        return ans;
-    }
-
-    public void dfs(StringBuilder sb) {
-        if (sb.length() == 2 * n) {
-            ans.add(sb.toString());
-            return;
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
         }
-
-        if (left < n) {
-            sb.append('(');
-            left++;
-            dfs(sb);
-
-            sb.deleteCharAt(sb.length() - 1);
-            left--;
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.val));
+        for (ListNode list : lists) {
+            if (list != null) {
+                queue.add(list);
+            }
         }
-
-        if (right < left) {
-            sb.append(')');
-            right++;
-            dfs(sb);
-
-            sb.deleteCharAt(sb.length() - 1);
-            right--;
+        ListNode head = new ListNode();
+        ListNode p = head;
+        while (!queue.isEmpty()) {
+            ListNode poll = queue.poll();
+            p.next = poll;
+            p = p.next;
+            poll = poll.next;
+            if (poll != null) {
+                queue.add(poll);
+            }
         }
+        return head.next;
     }
 }
