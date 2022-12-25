@@ -1,60 +1,37 @@
+import java.util.ArrayList;
+
 class Solution {
 
-    boolean[] col;
-    boolean[] slash;
-    boolean[] slash2;
-    int ans = 0;
-    int n;
-
-    public int totalNQueens(int n) {
-        this.n = n;
-        col = new boolean[n];
-        slash = new boolean[2 * n];
-        slash2 = new boolean[2 * n];
-        dfs(0);
-        return ans;
-    }
-
-    private void dfs(int k) {
-        if (k == n) {
-            ans++;
-            return;
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
         }
 
-        for (int i = 0; i < n; i++) {
-            if (isVail(k, i)) {
-                lock(k, i);
-                dfs(k + 1);
-                unLock(k, i);
+        boolean isNegative = (((dividend ^ divisor) >> 31) & 1) == 1;
+        if (dividend > 0) {
+            dividend = -dividend;
+        }
+        if (divisor > 0) {
+            divisor = -divisor;
+        }
+
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(divisor);
+        int res = 1;
+        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
+            list.add(list.get(list.size() - 1) << 1);
+            res <<= 1;
+        }
+
+        int ans = 0;
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (dividend <= list.get(i)) {
+                dividend -= list.get(i);
+                ans += res;
             }
+            res >>= 1;
         }
+        return isNegative ? -ans : ans;
+
     }
-
-    private boolean isVail(int x, int y) {
-        if (col[y]) {
-            return false;
-        }
-
-        if (slash[y - x + n]) {
-            return false;
-        }
-
-        if (slash2[x + y]) {
-            return false;
-        }
-        return true;
-    }
-
-    private void lock(int x, int y) {
-        col[y] = true;
-        slash[y - x + n] = true;
-        slash2[x + y] = true;
-    }
-
-    private void unLock(int x, int y) {
-        col[y] = false;
-        slash[y - x + n] = false;
-        slash2[x + y] = false;
-    }
-
 }
