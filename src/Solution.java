@@ -1,33 +1,29 @@
-import java.util.Arrays;
-
 class Solution {
 
-    public void nextPermutation(int[] nums) {
-        int k = nums.length - 1;
-        for (; k > 0; k--) {
-            if (nums[k] > nums[k - 1]) {
-                break;
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (target == nums[mid]) {
+                return mid;
+            }
+
+            if (target > nums[mid]) {
+                if (nums[mid] < nums[left] && target >= nums[left]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                if (nums[mid] >= nums[left] && target < nums[left]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
             }
         }
+        return -1;
 
-        if (k == 0) {
-            Arrays.sort(nums);
-            return;
-        }
-
-        for (int i = nums.length - 1; i >= 0; i--) {
-            if (nums[i] > nums[k - 1]) {
-                swap(nums, i, k - 1);
-                break;
-            }
-        }
-
-        Arrays.sort(nums, k, nums.length);
-    }
-
-    private void swap(int[] nums, int i, int j) {
-        int t = nums[i];
-        nums[i] = nums[j];
-        nums[j] = t;
     }
 }
