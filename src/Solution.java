@@ -1,37 +1,33 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 
 class Solution {
 
-    public int divide(int dividend, int divisor) {
-        if (dividend == Integer.MIN_VALUE && divisor == -1) {
-            return Integer.MAX_VALUE;
-        }
-
-        boolean isNegative = (((dividend ^ divisor) >> 31) & 1) == 1;
-        if (dividend > 0) {
-            dividend = -dividend;
-        }
-        if (divisor > 0) {
-            divisor = -divisor;
-        }
-
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(divisor);
-        int res = 1;
-        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
-            list.add(list.get(list.size() - 1) << 1);
-            res <<= 1;
-        }
-
-        int ans = 0;
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (dividend <= list.get(i)) {
-                dividend -= list.get(i);
-                ans += res;
+    public void nextPermutation(int[] nums) {
+        int k;
+        for (k = nums.length - 1; k > 0; k--) {
+            if (nums[k] > nums[k - 1]) {
+                break;
             }
-            res >>= 1;
         }
-        return isNegative ? -ans : ans;
 
+        if (k == 0) {
+            Arrays.sort(nums);
+            return;
+        }
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+            if (nums[i] > nums[k - 1]) {
+                swap(nums, i, k - 1);
+                break;
+            }
+        }
+        Arrays.sort(nums, k, nums.length);
+
+    }
+
+    private void swap(int[] nums, int x, int y) {
+        int t = nums[x];
+        nums[x] = nums[y];
+        nums[y] = t;
     }
 }
