@@ -1,25 +1,60 @@
 class Solution {
 
-    public void rotate(int[][] matrix) {
-        int n = matrix.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < i; j++) {
-                swap(matrix, i, j, j, i);
-            }
+    boolean[] col;
+    boolean[] slash;
+    boolean[] slash2;
+    int ans = 0;
+    int n;
+
+    public int totalNQueens(int n) {
+        this.n = n;
+        col = new boolean[n];
+        slash = new boolean[2 * n];
+        slash2 = new boolean[2 * n];
+        dfs(0);
+        return ans;
+    }
+
+    private void dfs(int k) {
+        if (k == n) {
+            ans++;
+            return;
         }
 
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n / 2; j++) {
-                swap(matrix, i, j, i, n - j - 1);
+            if (isVail(k, i)) {
+                lock(k, i);
+                dfs(k + 1);
+                unLock(k, i);
             }
         }
-
     }
 
-    private void swap(int[][] num, int x1, int y1, int x2, int y2) {
-        int t = num[x1][y1];
-        num[x1][y1] = num[x2][y2];
-        num[x2][y2] = t;
+    private boolean isVail(int x, int y) {
+        if (col[y]) {
+            return false;
+        }
 
+        if (slash[y - x + n]) {
+            return false;
+        }
+
+        if (slash2[x + y]) {
+            return false;
+        }
+        return true;
     }
+
+    private void lock(int x, int y) {
+        col[y] = true;
+        slash[y - x + n] = true;
+        slash2[x + y] = true;
+    }
+
+    private void unLock(int x, int y) {
+        col[y] = false;
+        slash[y - x + n] = false;
+        slash2[x + y] = false;
+    }
+
 }
