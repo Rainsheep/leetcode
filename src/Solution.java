@@ -1,23 +1,90 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
 
-    public String addBinary(String a, String b) {
-        StringBuilder sb = new StringBuilder();
-        int aIndex = a.length() - 1;
-        int bIndex = b.length() - 1;
-        int t = 0;
-        while (aIndex >= 0 || bIndex >= 0) {
-            char c1 = aIndex >= 0 ? a.charAt(aIndex) : '0';
-            char c2 = bIndex >= 0 ? b.charAt(bIndex) : '0';
-            int num = c1 - '0' + c2 - '0' + t;
-            t = num / 2;
-            sb.append((char) (num % 2 + '0'));
-            aIndex--;
-            bIndex--;
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<List<String>> lists = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
+        int nowLen = 0;
+        for (String word : words) {
+            int newLen;
+            if (nowLen == 0) {
+                newLen = word.length();
+            } else {
+                newLen = nowLen + word.length() + 1;
+            }
+
+            if (newLen <= maxWidth) {
+                temp.add(word);
+                nowLen = newLen;
+            } else {
+                lists.add(temp);
+                temp = new ArrayList<>();
+                temp.add(word);
+                nowLen = word.length();
+            }
+
         }
-        if (t != 0) {
-            sb.append(t);
+
+        lists.add(temp);
+
+        ArrayList<String> ans = new ArrayList<>();
+        for (int i = 0; i < lists.size(); i++) {
+            ans.add(convert(lists.get(i), maxWidth, i == lists.size() - 1));
         }
-        return sb.reverse().toString();
+        return ans;
+
 
     }
+
+
+    private String convert(List<String> list, int maxWidth, boolean left) {
+        StringBuilder sb = new StringBuilder();
+        if (list.size() == 1) {
+            sb.append(list.get(0));
+            int spaceNum = maxWidth - list.get(0).length();
+            sb.append(" ".repeat(Math.max(0, spaceNum)));
+            return sb.toString();
+        }
+
+        if (left) {
+            for (String s : list) {
+                if (sb.length() != 0) {
+                    sb.append(' ');
+                }
+                sb.append(s);
+            }
+
+            int spaceNum = maxWidth - sb.length();
+            sb.append(" ".repeat(Math.max(0, spaceNum)));
+            return sb.toString();
+        }
+
+        int sumLen = 0;
+        for (String s : list) {
+            sumLen += s.length();
+        }
+        int spaceNum = maxWidth - sumLen;
+        int avgSpaceNum = spaceNum / (list.size() - 1);
+        int leftSpaceNum = (spaceNum - avgSpaceNum * (list.size() - 1));
+        for (int i = 0; i < list.size(); i++) {
+            if (i == 0) {
+                sb.append(list.get(i));
+            } else {
+                if (leftSpaceNum > 0) {
+                    sb.append(' ');
+                    leftSpaceNum--;
+                }
+                sb.append(" ".repeat(avgSpaceNum));
+                sb.append(list.get(i));
+            }
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        new Solution().convert(List.of("science", "is", "what", "we"), 20, false);
+    }
+
 }
