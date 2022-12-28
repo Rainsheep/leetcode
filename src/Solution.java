@@ -1,25 +1,23 @@
 class Solution {
 
-    public int[] plusOne(int[] digits) {
-        int t = 1;
-        for (int i = digits.length - 1; i >= 0; i--) {
-            if (t == 0) {
-                return digits;
-            }
-            int num = digits[i] + t;
-            digits[i] = num % 10;
-            t = num / 10;
+    public String addBinary(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int aIndex = a.length() - 1;
+        int bIndex = b.length() - 1;
+        int t = 0;
+        while (aIndex >= 0 || bIndex >= 0) {
+            char c1 = aIndex >= 0 ? a.charAt(aIndex) : '0';
+            char c2 = bIndex >= 0 ? b.charAt(bIndex) : '0';
+            int num = c1 - '0' + c2 - '0' + t;
+            t = num / 2;
+            sb.append((char) (num % 2 + '0'));
+            aIndex--;
+            bIndex--;
         }
-
         if (t != 0) {
-            int length = digits.length;
-            int[] ans = new int[length + 1];
-            ans[0] = 1;
-            System.arraycopy(digits, 0, ans, 1, length);
-            return ans;
+            sb.append(t);
         }
-
-        return digits;
+        return sb.reverse().toString();
 
     }
 }
