@@ -1,66 +1,25 @@
 class Solution {
 
-    public boolean isNumber(String s) {
-        if (isFloat(s) || isInt(s)) {
-            return true;
-        }
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c == 'e' || c == 'E') {
-                String s1 = s.substring(0, i);
-                String s2 = s.substring(i + 1);
-                if ((isFloat(s1) || isInt(s1)) && isInt(s2)) {
-                    return true;
-                }
-
+    public int[] plusOne(int[] digits) {
+        int t = 1;
+        for (int i = digits.length - 1; i >= 0; i--) {
+            if (t == 0) {
+                return digits;
             }
-        }
-        return false;
-    }
-
-    private boolean isFloat(String s) {
-        if (s.length() == 0) {
-            return false;
-        }
-        int k = 0;
-        if (s.charAt(0) == '-' || s.charAt(0) == '+') {
-            k++;
-        }
-        if (k == s.length()) {
-            return false;
+            int num = digits[i] + t;
+            digits[i] = num % 10;
+            t = num / 10;
         }
 
-        int intNum = 0;
-        int pointNum = 0;
-        for (; k < s.length(); k++) {
-            if (s.charAt(k) == '.') {
-                pointNum++;
-            } else if (s.charAt(k) >= '0' && s.charAt(k) <= '9') {
-                intNum++;
-            } else {
-                return false;
-            }
+        if (t != 0) {
+            int length = digits.length;
+            int[] ans = new int[length + 1];
+            ans[0] = 1;
+            System.arraycopy(digits, 0, ans, 1, length);
+            return ans;
         }
 
-        return intNum > 0 && pointNum == 1;
-    }
+        return digits;
 
-    private boolean isInt(String s) {
-        if (s.length() == 0) {
-            return false;
-        }
-        int k = 0;
-        if (s.charAt(0) == '-' || s.charAt(0) == '+') {
-            k++;
-        }
-        if (k == s.length()) {
-            return false;
-        }
-        for (; k < s.length(); k++) {
-            if (s.charAt(k) < '0' || s.charAt(k) > '9') {
-                return false;
-            }
-        }
-        return true;
     }
 }
