@@ -1,59 +1,38 @@
 class Solution {
 
-    public void setZeroes(int[][] matrix) {
+    public boolean searchMatrix(int[][] matrix, int target) {
         int m = matrix.length;
         int n = matrix[0].length;
-        boolean firstRow0 = false;
-        boolean firstCol0 = false;
+        if (target < matrix[0][0] || target > matrix[m - 1][n - 1]) {
+            return false;
+        }
 
-        for (int i = 0; i < n; i++) {
-            if (matrix[0][i] == 0) {
-                firstRow0 = true;
-                break;
+        int left = 0;
+        int right = m - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (matrix[mid][0] == target) {
+                return true;
+            } else if (matrix[mid][0] > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
             }
         }
 
-        for (int[] ints : matrix) {
-            if (ints[0] == 0) {
-                firstCol0 = true;
-                break;
+        int k = right;
+        left = 0;
+        right = n - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (matrix[k][mid] == target) {
+                return true;
+            } else if (matrix[k][mid] > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
             }
         }
-
-        for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                if (matrix[i][j] == 0) {
-                    matrix[i][0] = matrix[0][j] = 0;
-                }
-            }
-        }
-
-        for (int i = 1; i < m; i++) {
-            if (matrix[i][0] == 0) {
-                for (int j = 0; j < n; j++) {
-                    matrix[i][j] = 0;
-                }
-            }
-        }
-
-        for (int i = 1; i < n; i++) {
-            if (matrix[0][i] == 0) {
-                for (int j = 0; j < m; j++) {
-                    matrix[j][i] = 0;
-                }
-            }
-        }
-
-        if (firstRow0) {
-            for (int i = 0; i < n; i++) {
-                matrix[0][i] = 0;
-            }
-        }
-
-        if (firstCol0) {
-            for (int i = 0; i < m; i++) {
-                matrix[i][0] = 0;
-            }
-        }
+        return false;
     }
 }
