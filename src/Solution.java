@@ -1,25 +1,55 @@
+import java.util.HashMap;
+
 class Solution {
 
-    public void sortColors(int[] nums) {
-        int n = nums.length;
+    HashMap<Character, Integer> flagMap = new HashMap<>();
+    HashMap<Character, Integer> map = new HashMap<>();
+
+    public String minWindow(String s, String t) {
+
+        int tLen = t.length();
+        int sLen = s.length();
+        for (int i = 0; i < tLen; i++) {
+            char c = t.charAt(i);
+            flagMap.put(c, flagMap.getOrDefault(c, 0) + 1);
+        }
+
         int left = 0;
-        int right = n - 1;
-        int now = 0;
-        while (now <= right) {
-            if (nums[now] == 0) {
-                swap(nums, now, left++);
-                now = Math.max(now, left);
-            } else if (nums[now] == 2) {
-                swap(nums, now, right--);
+        int right = -1;
+
+        int lAns = 0;
+        int rAns = 0;
+        while (true) {
+            if (check()) {
+                // flag
+                if (rAns == 0 || right + 1 - left < rAns - lAns) {
+                    lAns = left;
+                    rAns = right + 1;
+                }
+
+                // delete left
+                char c = s.charAt(left);
+                map.put(c, map.get(c) - 1);
+                left++;
             } else {
-                now++;
+                right++;
+                if (right == sLen) {
+                    break;
+                }
+                char c = s.charAt(right);
+                map.put(c, map.getOrDefault(c, 0) + 1);
             }
         }
+        return s.substring(lAns, rAns);
     }
 
-    private void swap(int[] nums, int i, int j) {
-        int t = nums[i];
-        nums[i] = nums[j];
-        nums[j] = t;
+
+    private boolean check() {
+        for (Character character : flagMap.keySet()) {
+            if (map.getOrDefault(character, 0) < flagMap.get(character)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
