@@ -1,38 +1,25 @@
 class Solution {
 
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-        if (target < matrix[0][0] || target > matrix[m - 1][n - 1]) {
-            return false;
-        }
-
+    public void sortColors(int[] nums) {
+        int n = nums.length;
         int left = 0;
-        int right = m - 1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            if (matrix[mid][0] == target) {
-                return true;
-            } else if (matrix[mid][0] > target) {
-                right = mid - 1;
+        int right = n - 1;
+        int now = 0;
+        while (now <= right) {
+            if (nums[now] == 0) {
+                swap(nums, now, left++);
+                now = Math.max(now, left);
+            } else if (nums[now] == 2) {
+                swap(nums, now, right--);
             } else {
-                left = mid + 1;
+                now++;
             }
         }
+    }
 
-        int k = right;
-        left = 0;
-        right = n - 1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            if (matrix[k][mid] == target) {
-                return true;
-            } else if (matrix[k][mid] > target) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        }
-        return false;
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 }
