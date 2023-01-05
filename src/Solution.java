@@ -1,55 +1,28 @@
-import java.util.HashMap;
-
 class Solution {
 
-    HashMap<Character, Integer> flagMap = new HashMap<>();
-    HashMap<Character, Integer> map = new HashMap<>();
+    public int minDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        int[][] dp = new int[m + 1][n + 1];
 
-    public String minWindow(String s, String t) {
-
-        int tLen = t.length();
-        int sLen = s.length();
-        for (int i = 0; i < tLen; i++) {
-            char c = t.charAt(i);
-            flagMap.put(c, flagMap.getOrDefault(c, 0) + 1);
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = i;
+        }
+        for (int i = 0; i <= n; i++) {
+            dp[0][i] = i;
         }
 
-        int left = 0;
-        int right = -1;
-
-        int lAns = 0;
-        int rAns = 0;
-        while (true) {
-            if (check()) {
-                // flag
-                if (rAns == 0 || right + 1 - left < rAns - lAns) {
-                    lAns = left;
-                    rAns = right + 1;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                int left = dp[i - 1][j] + 1;
+                int down = dp[i][j - 1] + 1;
+                int leftDown = dp[i - 1][j - 1];
+                if (word1.charAt(i - 1) != word2.charAt(j - 1)) {
+                    leftDown += 1;
                 }
-
-                // delete left
-                char c = s.charAt(left);
-                map.put(c, map.get(c) - 1);
-                left++;
-            } else {
-                right++;
-                if (right == sLen) {
-                    break;
-                }
-                char c = s.charAt(right);
-                map.put(c, map.getOrDefault(c, 0) + 1);
+                dp[i][j] = Math.min(leftDown, Math.min(left, down));
             }
         }
-        return s.substring(lAns, rAns);
-    }
-
-
-    private boolean check() {
-        for (Character character : flagMap.keySet()) {
-            if (map.getOrDefault(character, 0) < flagMap.get(character)) {
-                return false;
-            }
-        }
-        return true;
+        return dp[m][n];
     }
 }
