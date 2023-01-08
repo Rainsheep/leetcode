@@ -6,24 +6,22 @@ class Solution {
 
     ArrayList<List<Integer>> ans = new ArrayList<>();
 
-    public List<List<Integer>> combine(int n, int k) {
+    public List<List<Integer>> subsets(int[] nums) {
         LinkedList<Integer> list = new LinkedList<>();
-        dfs(1, k, n, list);
+        dfs(0, nums, list);
         return ans;
     }
 
-    private void dfs(int now, int k, int n, LinkedList<Integer> list) {
-        if (list.size() == k) {
+    private void dfs(int index, int[] nums, LinkedList<Integer> list) {
+        if (index == nums.length) {
             ans.add(new ArrayList<>(list));
             return;
         }
-        if (now == n + 1) {
-            return;
-        }
 
-        list.add(now);
-        dfs(now + 1, k, n, list);
+        dfs(index + 1, nums, list);
+
+        list.add(nums[index]);
+        dfs(index + 1, nums, list);
         list.removeLast();
-        dfs(now + 1, k, n, list);
     }
 }
