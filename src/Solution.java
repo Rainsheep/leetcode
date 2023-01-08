@@ -1,29 +1,49 @@
+import java.util.HashMap;
+
 class Solution {
 
-    public int minDistance(String word1, String word2) {
-        int m = word1.length();
-        int n = word2.length();
-        int[][] dp = new int[m + 1][n + 1];
-        for (int i = 0; i <= m; i++) {
-            dp[i][0] = i;
+    HashMap<Character, Integer> flagMap = new HashMap<>();
+    HashMap<Character, Integer> map = new HashMap<>();
+
+    public String minWindow(String s, String t) {
+        int leftAns = 0;
+        int rightAns = 0;
+
+        int left = 0;
+        int right = 0;
+
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            flagMap.put(c, flagMap.getOrDefault(c, 0) + 1);
         }
 
-        for (int i = 0; i <= n; i++) {
-            dp[0][i] = i;
-        }
-
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j <= n; j++) {
-                int left = dp[i][j - 1] + 1;
-                int up = dp[i - 1][j] + 1;
-                int leftUp = dp[i - 1][j - 1];
-                if (word1.charAt(i - 1) != word2.charAt(j - 1)) {
-                    leftUp += 1;
+        while (right != s.length() + 1) {
+            if (check()) {
+                if (rightAns == 0 || right - left < rightAns - leftAns) {
+                    leftAns = left;
+                    rightAns = right;
                 }
-                dp[i][j] = Math.min(leftUp, Math.min(left, up));
+                char c = s.charAt(left);
+                map.put(c, map.getOrDefault(c, 1) - 1);
+                left++;
+            } else {
+                if (right == s.length()) {
+                    break;
+                }
+                char c = s.charAt(right);
+                map.put(c, map.getOrDefault(c, 0) + 1);
+                right++;
             }
         }
-        return dp[m][n];
+        return s.substring(leftAns, rightAns);
+    }
 
+    private boolean check() {
+        for (Character c : flagMap.keySet()) {
+            if (map.getOrDefault(c, 0) < flagMap.get(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
