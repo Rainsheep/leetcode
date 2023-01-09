@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 class Solution {
 
     public int maximalRectangle(char[][] matrix) {
@@ -18,14 +20,18 @@ class Solution {
         }
 
         int[][][] minFlag = new int[n][m][m];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                for (int k = j; k < m; k++) {
-                    int min = nums[j][i];
-                    for (int col = j; col <= k; col++) {
-                        min = Math.min(min, nums[col][i]);
-                    }
-                    minFlag[i][j][k] = min;
+        for (int col = 0; col < n; col++) {
+            for (int x1 = 0; x1 < m; x1++) {
+
+                LinkedList<Integer> list = new LinkedList<>();
+                int nowMin = nums[x1][col];
+                for (int p = x1; p < m; p++) {
+                    nowMin = Math.min(nowMin, nums[p][col]);
+                    list.add(nowMin);
+                }
+
+                for (int x2 = m - 1; x2 >= x1; x2--) {
+                    minFlag[col][x1][x2] = list.removeLast();
                 }
             }
         }
