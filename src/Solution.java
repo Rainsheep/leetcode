@@ -1,4 +1,5 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 
 class Solution {
 
@@ -7,42 +8,32 @@ class Solution {
         int n = matrix[0].length;
         int[][] nums = new int[m][n];
         for (int i = 0; i < m; i++) {
-            nums[i][0] = matrix[i][0] - '0';
-        }
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                nums[i][j] = matrix[i][j] - '0';
-                if (nums[i][j] != 0) {
-                    nums[i][j] = nums[i][j - 1] + 1;
-                }
-            }
-        }
-
-        int[][][] minFlag = new int[n][m][m];
-        for (int col = 0; col < n; col++) {
-            for (int x1 = 0; x1 < m; x1++) {
-
-                LinkedList<Integer> list = new LinkedList<>();
-                int nowMin = nums[x1][col];
-                for (int p = x1; p < m; p++) {
-                    nowMin = Math.min(nowMin, nums[p][col]);
-                    list.add(nowMin);
-                }
-
-                for (int x2 = m - 1; x2 >= x1; x2--) {
-                    minFlag[col][x1][x2] = list.removeLast();
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    nums[i][j] = (j == 0 ? 0 : nums[i][j - 1]) + 1;
                 }
             }
         }
 
         int ans = 0;
         for (int col = 0; col < n; col++) {
-            for (int x1 = 0; x1 < m; x1++) {
-                for (int x2 = x1; x2 < m; x2++) {
-                    ans = Math.max(ans, minFlag[col][x1][x2] * (x2 - x1 + 1));
+            int[] up = new int[m];
+            int[] down = new int[m];
+            Arrays.fill(down, m);
+            ArrayDeque<Integer> stack = new ArrayDeque<>();
+            for (int row = 0; row < m; row++) {
+                while (!stack.isEmpty() && nums[stack.peek()][col] >= nums[row][col]) {
+                    down[stack.peek()] = row;
+                    stack.pop();
                 }
+                up[row] = stack.isEmpty() ? -1 : stack.peek();
+                stack.push(row);
             }
+
+            for (int row = 0; row < m; row++) {
+                ans = Math.max(ans, nums[row][col] * (down[row] - up[row] - 1));
+            }
+
         }
         return ans;
     }
