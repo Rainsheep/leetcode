@@ -1,18 +1,28 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 
 class Solution {
 
-    public List<Integer> grayCode(int n) {
-        ArrayList<Integer> ans = new ArrayList<>();
-        ans.add(0);
-        ans.add(1);
-        for (int i = 1; i < n; i++) {
-            int size = ans.size();
-            for (int j = size - 1; j >= 0; j--) {
-                ans.add(ans.get(j) | (1 << i));
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        Arrays.fill(right, n);
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                right[stack.peek()] = i;
+                stack.pop();
             }
+            left[i] = (stack.isEmpty() ? -1 : stack.peek());
+            stack.push(i);
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(ans, (right[i] - left[i] - 1) * heights[i]);
         }
         return ans;
+
     }
 }
