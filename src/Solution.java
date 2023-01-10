@@ -1,30 +1,18 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
 
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
-        int[] num = Arrays.copyOfRange(nums1, 0, m);
-        int p1 = 0;
-        int p2 = 0;
-
-        for (int i = 0; i < m + n; i++) {
-            if (p1 < m && p2 < n) {
-                if (num[p1] <= nums2[p2]) {
-                    nums1[i] = num[p1++];
-                } else {
-                    nums1[i] = nums2[p2++];
-                }
-                continue;
+    public List<Integer> grayCode(int n) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        ans.add(0);
+        ans.add(1);
+        for (int i = 1; i < n; i++) {
+            int size = ans.size();
+            for (int j = size - 1; j >= 0; j--) {
+                ans.add(ans.get(j) | (1 << i));
             }
-
-            if (p1 < m) {
-                nums1[i] = num[p1++];
-            } else {
-                nums1[i] = nums2[p2++];
-            }
-
         }
-
+        return ans;
     }
-
 }
