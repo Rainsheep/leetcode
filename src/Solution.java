@@ -1,38 +1,16 @@
-import java.util.ArrayDeque;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
 
-    public int maximalRectangle(char[][] matrix) {
-        int m = matrix.length;
-        int n = matrix[0].length;
-        int[][] left = new int[m][n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (matrix[i][j] == '1') {
-                    left[i][j] = (j == 0 ? 0 : left[i][j - 1]) + 1;
-                }
-            }
-        }
-
-        int ans = 0;
-        for (int col = 0; col < n; col++) {
-            int[] up = new int[m];
-            int[] down = new int[m];
-            Arrays.fill(down, m);
-            ArrayDeque<Integer> stack = new ArrayDeque<>();
-            for (int row = 0; row < m; row++) {
-                while (!stack.isEmpty() && left[stack.peek()][col] >= left[row][col]) {
-                    down[stack.peek()] = row;
-                    stack.pop();
-                }
-
-                up[row] = stack.isEmpty() ? -1 : stack.peek();
-                stack.push(row);
-            }
-
-            for (int row = 0; row < m; row++) {
-                ans = Math.max(ans, (down[row] - up[row] - 1) * left[row][col]);
+    public List<Integer> grayCode(int n) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        ans.add(0);
+        ans.add(1);
+        for (int i = 1; i < n; i++) {
+            int size = ans.size();
+            for (int j = size - 1; j >= 0; j--) {
+                ans.add(ans.get(j) | (1 << i));
             }
         }
         return ans;
