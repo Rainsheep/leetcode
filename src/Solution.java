@@ -1,18 +1,29 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 class Solution {
 
-    public List<Integer> grayCode(int n) {
-        ArrayList<Integer> ans = new ArrayList<>();
-        ans.add(0);
-        ans.add(1);
-        for (int i = 1; i < n; i++) {
-            int size = ans.size();
-            for (int j = size - 1; j >= 0; j--) {
-                ans.add(ans.get(j) | (1 << i));
-            }
+    HashSet<List<Integer>> set = new HashSet<>();
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        dfs(nums, 0, new ArrayDeque<>());
+        return new ArrayList<>(set);
+    }
+
+    private void dfs(int[] nums, int index, ArrayDeque<Integer> list) {
+        if (index == nums.length) {
+            ArrayList<Integer> t = new ArrayList<>(list);
+            Collections.sort(t);
+            set.add(t);
+            return;
         }
-        return ans;
+
+        list.add(nums[index]);
+        dfs(nums, index + 1, list);
+        list.removeLast();
+        dfs(nums, index + 1, list);
     }
 }
