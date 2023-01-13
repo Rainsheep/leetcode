@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 class TreeNode {
 
     int val;
@@ -22,38 +20,16 @@ class TreeNode {
 
 class Solution {
 
-    ArrayList<TreeNode> list = new ArrayList<>();
-
-    public void recoverTree(TreeNode root) {
-        dfs(root);
-        int index1 = -1;
-        int index2 = -1;
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i).val < list.get(i - 1).val) {
-                index2 = i;
-                if (index1 == -1) {
-                    index1 = i - 1;
-                } else {
-                    break;
-                }
-            }
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
         }
-
-        int x = list.get(index1).val;
-        int y = list.get(index2).val;
-
-        list.get(index1).val = y;
-        list.get(index2).val = x;
-
-
-    }
-
-    private void dfs(TreeNode root) {
-        if (root == null) {
-            return;
+        if (p == null || q == null) {
+            return false;
         }
-        dfs(root.left);
-        list.add(root);
-        dfs(root.right);
+        if (p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 }
