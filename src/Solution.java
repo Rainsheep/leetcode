@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
-
 class TreeNode {
 
     int val;
@@ -24,29 +20,14 @@ class TreeNode {
 
 class Solution {
 
-    public List<TreeNode> generateTrees(int n) {
-        return dfs(1, n);
-    }
-
-    private List<TreeNode> dfs(int start, int end) {
-        ArrayList<TreeNode> list = new ArrayList<>();
-        if (start > end) {
-            list.add(null);
-            return list;
-        }
-
-        for (int i = start; i <= end; i++) {
-            List<TreeNode> leftList = dfs(start, i - 1);
-            List<TreeNode> rightList = dfs(i + 1, end);
-            for (TreeNode left : leftList) {
-                for (TreeNode right : rightList) {
-                    TreeNode root = new TreeNode(i);
-                    root.left = left;
-                    root.right = right;
-                    list.add(root);
-                }
+    public int numTrees(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= i - 1; j++) {
+                dp[i] += dp[j] * dp[i - 1 - j];
             }
         }
-        return list;
+        return dp[n];
     }
 }
