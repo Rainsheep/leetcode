@@ -22,16 +22,30 @@ class TreeNode {
 
 class Solution {
 
-    ArrayList<Integer> list = new ArrayList<>();
+    ArrayList<TreeNode> list = new ArrayList<>();
 
-    public boolean isValidBST(TreeNode root) {
+    public void recoverTree(TreeNode root) {
         dfs(root);
+        int index1 = -1;
+        int index2 = -1;
         for (int i = 1; i < list.size(); i++) {
-            if (list.get(i) <= list.get(i - 1)) {
-                return false;
+            if (list.get(i).val < list.get(i - 1).val) {
+                index2 = i;
+                if (index1 == -1) {
+                    index1 = i - 1;
+                } else {
+                    break;
+                }
             }
         }
-        return true;
+
+        int x = list.get(index1).val;
+        int y = list.get(index2).val;
+
+        list.get(index1).val = y;
+        list.get(index2).val = x;
+
+
     }
 
     private void dfs(TreeNode root) {
@@ -39,7 +53,7 @@ class Solution {
             return;
         }
         dfs(root.left);
-        list.add(root.val);
+        list.add(root);
         dfs(root.right);
     }
 }
