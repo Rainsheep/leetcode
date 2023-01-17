@@ -1,61 +1,27 @@
-import java.util.ArrayList;
-import java.util.List;
-
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(int val) {
-        this.val = val;
-    }
-
-    TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
 class Solution {
 
-    ArrayList<TreeNode> list = new ArrayList<>();
-
-    public void recoverTree(TreeNode root) {
-        dfs(root);
-        int[] indexs = find(list);
-        int t = list.get(indexs[0]).val;
-        list.get(indexs[0]).val = list.get(indexs[1]).val;
-        list.get(indexs[1]).val = t;
-        return;
-
-    }
-
-    private void dfs(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-        dfs(root.left);
-        list.add(root);
-        dfs(root.right);
-    }
-
-    private int[] find(List<TreeNode> list) {
-        int f1 = -1, f2 = -1;
-        for (int i = 0; i < list.size() - 1; i++) {
-            if (list.get(i).val > list.get(i + 1).val) {
-                f2 = i + 1;
-                if (f1 == -1) {
-                    f1 = i;
+    public int minDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        int[][] dp = new int[m + 1][n + 1];
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= n; j++) {
+                if (i == 0) {
+                    dp[0][j] = j;
+                } else if (j == 0) {
+                    dp[i][0] = i;
                 } else {
-                    break;
+                    int up = dp[i - 1][j] + 1;
+                    int left = dp[i][j - 1] + 1;
+                    int leftUp = dp[i - 1][j - 1];
+                    if (word1.charAt(i - 1) != word2.charAt(j - 1)) {
+                        leftUp++;
+                    }
+                    dp[i][j] = Math.min(up, Math.min(leftUp, left));
                 }
             }
         }
-        return new int[]{f1, f2};
+
+        return dp[m][n];
     }
 }
