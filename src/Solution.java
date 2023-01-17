@@ -1,27 +1,61 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class TreeNode {
+
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
 class Solution {
 
-    public boolean isInterleave(String s1, String s2, String s3) {
-        int s1Len = s1.length();
-        int s2Len = s2.length();
-        int s3Len = s3.length();
-        if (s1Len + s2Len != s3Len) {
-            return false;
-        }
+    ArrayList<TreeNode> list = new ArrayList<>();
 
-        boolean[][] dp = new boolean[s1Len + 1][s2Len + 1];
-        dp[0][0] = true;
-        for (int i = 0; i <= s1Len; i++) {
-            for (int j = 0; j <= s2Len; j++) {
-                if (i > 0) {
-                    dp[i][j] = dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1);
-                }
-                if (j > 0) {
-                    dp[i][j] = dp[i][j] || dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1);
+    public void recoverTree(TreeNode root) {
+        dfs(root);
+        int[] indexs = find(list);
+        int t = list.get(indexs[0]).val;
+        list.get(indexs[0]).val = list.get(indexs[1]).val;
+        list.get(indexs[1]).val = t;
+        return;
+
+    }
+
+    private void dfs(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        dfs(root.left);
+        list.add(root);
+        dfs(root.right);
+    }
+
+    private int[] find(List<TreeNode> list) {
+        int f1 = -1, f2 = -1;
+        for (int i = 0; i < list.size() - 1; i++) {
+            if (list.get(i).val > list.get(i + 1).val) {
+                f2 = i + 1;
+                if (f1 == -1) {
+                    f1 = i;
+                } else {
+                    break;
                 }
             }
         }
-
-        return dp[s1Len][s2Len];
-
+        return new int[]{f1, f2};
     }
 }
