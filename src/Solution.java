@@ -3,26 +3,45 @@ import java.util.Arrays;
 
 class Solution {
 
-    public int largestRectangleArea(int[] heights) {
-        int len = heights.length;
-        int[] left = new int[len];
-        int[] right = new int[len];
-        Arrays.fill(right, len);
-        ArrayDeque<Integer> stack = new ArrayDeque<>();
-        for (int i = 0; i < len; i++) {
-            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
-                Integer pop = stack.pop();
-                right[pop] = i;
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] nums = new int[m][n];
+        int ans = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    nums[i][j] = (j == 0 ? 1 : (nums[i][j - 1] + 1));
+                }
             }
-            left[i] = stack.isEmpty() ? -1 : stack.peek();
-            stack.push(i);
         }
 
-        int ans = 0;
-        for (int i = 0; i < len; i++) {
-            int area = (right[i] - left[i] - 1) * heights[i];
-            ans = Math.max(ans, area);
+        int[] up = new int[m];
+        int[] down = new int[m];
+
+        for (int col = 0; col < n; col++) {
+            Arrays.fill(down, m);
+
+            ArrayDeque<Integer> stack = new ArrayDeque<>();
+            for (int row = 0; row < m; row++) {
+                while (!stack.isEmpty() && nums[stack.peek()][col] >= nums[row][col]) {
+                    Integer pop = stack.pop();
+                    down[pop] = row;
+                }
+
+                up[row] = stack.isEmpty() ? -1 : stack.peek();
+                stack.push(row);
+            }
+
+            for (int j = 0; j < m; j++) {
+                int area = nums[j][col] * (down[j] - up[j] - 1);
+                ans = Math.max(ans, area);
+
+            }
+
         }
         return ans;
+
     }
 }
