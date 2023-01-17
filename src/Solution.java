@@ -1,52 +1,28 @@
-import java.util.HashMap;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 
 class Solution {
 
-    HashMap<Character, Integer> flagMap = new HashMap<>();
-    HashMap<Character, Integer> map = new HashMap<>();
-
-    public String minWindow(String s, String t) {
-
-        int tLen = t.length();
-        for (int i = 0; i < tLen; i++) {
-            char c = t.charAt(i);
-            flagMap.put(c, flagMap.getOrDefault(c, 0) + 1);
+    public int largestRectangleArea(int[] heights) {
+        int len = heights.length;
+        int[] left = new int[len];
+        int[] right = new int[len];
+        Arrays.fill(right, len);
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < len; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] >= heights[i]) {
+                Integer pop = stack.pop();
+                right[pop] = i;
+            }
+            left[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
         }
 
-        int left = 0;
-        int right = -1;
-        int leftAns = 0;
-        int rightAns = -1;
-        while (true) {
-            while (check()) {
-                if (rightAns == -1 || right - left < rightAns - leftAns) {
-                    leftAns = left;
-                    rightAns = right;
-                }
-
-                char leftChar = s.charAt(left);
-                map.put(leftChar, map.get(leftChar) - 1);
-                left++;
-            }
-
-            right++;
-            if (right == s.length()) {
-                break;
-            }
-            char rightChar = s.charAt(right);
-            map.put(rightChar, map.getOrDefault(rightChar, 0) + 1);
+        int ans = 0;
+        for (int i = 0; i < len; i++) {
+            int area = (right[i] - left[i] - 1) * heights[i];
+            ans = Math.max(ans, area);
         }
-
-        return s.substring(leftAns, rightAns + 1);
-    }
-
-
-    private boolean check() {
-        for (Character character : flagMap.keySet()) {
-            if (map.getOrDefault(character, 0) < flagMap.get(character)) {
-                return false;
-            }
-        }
-        return true;
+        return ans;
     }
 }
