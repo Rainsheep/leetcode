@@ -1,52 +1,27 @@
-import java.util.ArrayList;
-import java.util.List;
-
-
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(int val) {
-        this.val = val;
-    }
-
-    TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
 class Solution {
 
-
-    public List<TreeNode> generateTrees(int n) {
-        return generateTree(1, n);
-    }
-
-    private List<TreeNode> generateTree(int left, int right) {
-        ArrayList<TreeNode> res = new ArrayList<>();
-        if (left > right) {
-            res.add(null);
-            return res;
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int s1Len = s1.length();
+        int s2Len = s2.length();
+        int s3Len = s3.length();
+        if (s1Len + s2Len != s3Len) {
+            return false;
         }
-        for (int i = left; i <= right; i++) {
-            List<TreeNode> lefts = generateTree(left, i - 1);
-            List<TreeNode> rights = generateTree(i + 1, right);
-            for (TreeNode leftNode : lefts) {
-                for (TreeNode rightNode : rights) {
-                    TreeNode node = new TreeNode(i);
-                    node.left = leftNode;
-                    node.right = rightNode;
-                    res.add(node);
+
+        boolean[][] dp = new boolean[s1Len + 1][s2Len + 1];
+        dp[0][0] = true;
+        for (int i = 0; i <= s1Len; i++) {
+            for (int j = 0; j <= s2Len; j++) {
+                if (i > 0) {
+                    dp[i][j] = dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1);
+                }
+                if (j > 0) {
+                    dp[i][j] = dp[i][j] || dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1);
                 }
             }
         }
-        return res;
+
+        return dp[s1Len][s2Len];
+
     }
 }
