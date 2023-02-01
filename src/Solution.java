@@ -1,24 +1,42 @@
+class TreeNode {
+
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
 class Solution {
 
-    public int jump(int[] nums) {
-        int maxIndex = 0;
-        int step = 0;
-        int nextMax = 0;
-        int len = nums.length;
-
-        for (int i = 0; i < len - 1; i++) {
-            nextMax = Math.max(nextMax, i + nums[i]);
-
-            if (nextMax >= len - 1) {
-                return step + 1;
-            }
-
-            if (maxIndex == i) {
-                maxIndex = nextMax;
-                step++;
-            }
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return true;
         }
-        return 0;
+        return isMirror(root.left, root.right);
+    }
 
+    private boolean isMirror(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        }
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        if (root1.val != root2.val) {
+            return false;
+        }
+        return isMirror(root1.left, root2.right) && isMirror(root1.right, root2.left);
     }
 }
