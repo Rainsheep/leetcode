@@ -1,3 +1,7 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+
 class TreeNode {
 
     int val;
@@ -20,23 +24,31 @@ class TreeNode {
 
 class Solution {
 
-    public boolean isSymmetric(TreeNode root) {
-        if (root == null) {
-            return true;
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        ArrayList<List<Integer>> ret = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        ArrayDeque<TreeNode> queue = new ArrayDeque<>();
+        int size = 0;
+        if (root != null) {
+            queue.add(root);
+            size = 1;
         }
-        return isMirror(root.left, root.right);
-    }
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.pop();
+            if (node.left != null) {
+                queue.addLast(node.left);
+            }
+            if (node.right != null) {
+                queue.addLast(node.right);
+            }
+            list.add(node.val);
+            if (list.size() == size || queue.isEmpty()) {
+                size = queue.size();
+                ret.add(list);
+                list = new ArrayList<>();
+            }
+        }
+        return ret;
 
-    private boolean isMirror(TreeNode root1, TreeNode root2) {
-        if (root1 == null && root2 == null) {
-            return true;
-        }
-        if (root1 == null || root2 == null) {
-            return false;
-        }
-        if (root1.val != root2.val) {
-            return false;
-        }
-        return isMirror(root1.left, root2.right) && isMirror(root1.right, root2.left);
     }
 }
