@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 class TreeNode {
 
     int val;
@@ -21,24 +19,21 @@ class TreeNode {
 }
 
 class Solution {
-
-    ArrayList<TreeNode> list = new ArrayList<>();
-
     public void flatten(TreeNode root) {
-        dfs(root);
-        for (int i = 0; i < list.size(); i++) {
-            TreeNode now = list.get(i);
-            now.left = null;
-            now.right = i == list.size() - 1 ? null : list.get(i + 1);
-        }
-    }
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.left != null) {
+                TreeNode next = curr.left;
+                TreeNode preNode = next;
+                while (preNode.right != null) {
+                    preNode = preNode.right;
+                }
 
-    private void dfs(TreeNode root) {
-        if (root == null) {
-            return;
+                preNode.right = curr.right;
+                curr.left = null;
+                curr.right = next;
+            }
+            curr = curr.right;
         }
-        list.add(root);
-        dfs(root.left);
-        dfs(root.right);
     }
 }
