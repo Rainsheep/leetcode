@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 class TreeNode {
 
@@ -23,29 +22,23 @@ class TreeNode {
 
 class Solution {
 
-    private Map<Integer, Integer> indexMap;
+    ArrayList<TreeNode> list = new ArrayList<>();
 
-    // preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]  输出: [3,9,20,null,null,15,7]
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
-        int n = preorder.length;
-        // 构造哈希映射，帮助我们快速定位根节点
-        indexMap = new HashMap<>();
-        for (int i = 0; i < n; i++) {
-            indexMap.put(inorder[i], i);
+    public void flatten(TreeNode root) {
+        dfs(root);
+        for (int i = 0; i < list.size(); i++) {
+            TreeNode now = list.get(i);
+            now.left = null;
+            now.right = i == list.size() - 1 ? null : list.get(i + 1);
         }
-
-        return genTree(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
     }
 
-    private TreeNode genTree(int[] preorder, int[] inorder, int preLeft, int preRight, int inLeft, int inRight) {
-        if (preLeft > preRight || inLeft > inRight) {
-            return null;
+    private void dfs(TreeNode root) {
+        if (root == null) {
+            return;
         }
-        TreeNode root = new TreeNode(preorder[preLeft]);
-        int index = indexMap.get(preorder[preLeft]);
-        int leftChildNum = index - inLeft;
-        root.left = genTree(preorder, inorder, preLeft + 1, preLeft + leftChildNum, inLeft, index - 1);
-        root.right = genTree(preorder, inorder, preLeft + leftChildNum + 1, preRight, index + 1, inRight);
-        return root;
+        list.add(root);
+        dfs(root.left);
+        dfs(root.right);
     }
 }
