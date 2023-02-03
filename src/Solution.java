@@ -1,32 +1,40 @@
-
-class ListNode {
+class TreeNode {
 
     int val;
-    ListNode next;
+    TreeNode left;
+    TreeNode right;
 
-    ListNode(int x) {
-        val = x;
-        next = null;
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
 
-public class Solution {
+class Solution {
 
-    public boolean hasCycle(ListNode head) {
-        ListNode p1 = head;
-        ListNode p2 = head;
-        while (p2 != null) {
-            p2 = p2.next;
-            if (p2 == null) {
-                return false;
+    public void flatten(TreeNode root) {
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.left != null) {
+                TreeNode next = cur.left;
+                TreeNode preNode = next;
+                while (preNode.right != null) {
+                    preNode = preNode.right;
+                }
+                preNode.right = cur.right;
+                cur.left = null;
+                cur.right = next;
             }
-            p2 = p2.next;
-            p1 = p1.next;
-
-            if (p1 == p2) {
-                return true;
-            }
+            cur = cur.right;
         }
-        return false;
+
     }
 }
