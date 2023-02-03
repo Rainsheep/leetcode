@@ -1,24 +1,32 @@
-import java.util.HashSet;
-import java.util.List;
 
-class Solution {
+class ListNode {
 
-    public boolean wordBreak(String s, List<String> wordDict) {
-        HashSet<String> set = new HashSet<>(wordDict);
+    int val;
+    ListNode next;
 
-        int len = s.length();
-        boolean[] dp = new boolean[len + 1];
-        dp[0] = true;
-        for (int i = 1; i <= len; i++) {
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j <= i; j++) {
-                if (dp[j] && set.contains(s.substring(j, i))) {
-                    dp[i] = true;
-                    break;
-                }
+    ListNode(int x) {
+        val = x;
+        next = null;
+    }
+}
+
+public class Solution {
+
+    public boolean hasCycle(ListNode head) {
+        ListNode p1 = head;
+        ListNode p2 = head;
+        while (p2 != null) {
+            p2 = p2.next;
+            if (p2 == null) {
+                return false;
+            }
+            p2 = p2.next;
+            p1 = p1.next;
+
+            if (p1 == p2) {
+                return true;
             }
         }
-
-        return dp[len];
+        return false;
     }
 }
