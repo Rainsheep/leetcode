@@ -1,50 +1,49 @@
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(int val) {
-        this.val = val;
-    }
-
-    TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
+import java.util.HashMap;
 
 class Solution {
 
-    int ans;
+    HashMap<Integer, Integer> map = new HashMap<>();
 
-    public int maxPathSum(TreeNode root) {
-        ans = root.val;
-        dfs(root);
+    public int longestConsecutive(int[] nums) {
+        for (int num : nums) {
+            map.putIfAbsent(num, num);
+            if (map.get(num - 1) != null) {
+                merge(num, num - 1);
+            }
+            if (map.get(num + 1) != null) {
+                merge(num, num + 1);
+            }
+        }
+
+        int ans = 0;
+        for (int num : nums) {
+            ans = Math.max(num - find(num) + 1, ans);
+        }
         return ans;
-
     }
 
-    private int dfs(TreeNode root) {
-        if (root == null) {
-            return -1;
+    private int find(int x) {
+        if (map.get(x) == x) {
+            return x;
         }
-
-        int leftMax = dfs(root.left);
-        int rightMax = dfs(root.right);
-        int maxVal = Math.max(leftMax, rightMax);
-        int res = root.val + Math.max(maxVal, 0);
-
-        if (leftMax > 0 && rightMax > 0) {
-            ans = Math.max(ans, leftMax + rightMax + root.val);
-        } else {
-            ans = Math.max(ans, res);
-        }
-
+        int res = find(map.get(x));
+        map.put(x, res);
         return res;
+    }
+
+    private void merge(int x, int y) {
+        int xParent = find(x);
+        int yParent = find(y);
+        if (xParent != yParent) {
+            if (xParent < yParent) {
+                map.put(yParent, xParent);
+            } else {
+                map.put(xParent, yParent);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new Solution().longestConsecutive(new int[]{100, 4, 200, 1, 3, 2});
     }
 }
