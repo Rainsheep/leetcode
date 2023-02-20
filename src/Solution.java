@@ -1,85 +1,66 @@
-import java.util.HashMap;
+class ListNode {
 
-public class LRUCache {
+    int val;
+    ListNode next;
 
-    private static class Node {
+    ListNode() {
+    }
 
-        int key;
-        int value;
-        Node pre;
-        Node next;
+    ListNode(int val) {
+        this.val = val;
+    }
 
-        public Node() {
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
+class Solution {
+
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
         }
 
-        public Node(int key, int value) {
-            this.key = key;
-            this.value = value;
+        ListNode slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
         }
+        ListNode mid = slow.next;
+        slow.next = null;
+        ListNode left = sortList(head);
+        ListNode right = sortList(mid);
+        return merge(left, right);
     }
 
-    HashMap<Integer, Node> cache = new HashMap<>();
-    int capacity;
-    Node head;
-    Node tail;
+    private ListNode merge(ListNode a, ListNode b) {
+        ListNode newHead = new ListNode();
+        ListNode p = newHead;
+        while (a != null || b != null) {
+            if (a == null) {
+                p.next = b;
+                break;
+            }
 
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        head = new Node();
-        tail = new Node();
-        head.next = tail;
-        tail.pre = head;
-    }
+            if (b == null) {
+                p.next = a;
+                break;
+            }
 
-    public int get(int key) {
-        if (cache.containsKey(key)) {
-            Node node = cache.get(key);
-            moveToLast(node);
-            return node.value;
-        }
-        return -1;
-    }
+            if (a.val <= b.val) {
+                p.next = a;
+                a = a.next;
+            } else {
+                p.next = b;
+                b = b.next;
 
-    private void moveToLast(Node node) {
-        node.pre.next = node.next;
-        node.next.pre = node.pre;
-
-        addToTail(node);
-    }
-
-    public void put(int key, int value) {
-        if (cache.containsKey(key)) {
-            Node node = cache.get(key);
-            node.value = value;
-            moveToLast(node);
-            return;
+            }
+            p = p.next;
         }
 
-        Node node = new Node(key, value);
-        addToTail(node);
-        cache.put(key, node);
+        return newHead.next;
 
-        if (cache.size() > capacity) {
-            int removeKey = removeHead();
-            cache.remove(removeKey);
-        }
     }
-
-    private void addToTail(Node node) {
-        tail.pre.next = node;
-
-        node.pre = tail.pre;
-        node.next = tail;
-
-        tail.pre = node;
-    }
-
-    private int removeHead() {
-        Node node = head.next;
-        head.next = node.next;
-        node.next.pre = head;
-        return node.key;
-    }
-
-
 }
