@@ -1,35 +1,25 @@
-class ListNode {
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    int val;
-    ListNode next;
+class LRUCache extends LinkedHashMap<Integer, Integer> {
 
-    ListNode(int x) {
-        val = x;
-        next = null;
+    private int capacity;
+
+    public LRUCache(int capacity) {
+        super(capacity, 0.75F, true);
+        this.capacity = capacity;
     }
-}
 
+    public int get(int key) {
+        return super.getOrDefault(key, -1);
+    }
 
-public class Solution {
+    public void put(int key, int value) {
+        super.put(key, value);
+    }
 
-    public ListNode detectCycle(ListNode head) {
-        ListNode fast = head, slow = head;
-        while (true) {
-            if (fast == null || fast.next == null) {
-                return null;
-            }
-            fast = fast.next.next;
-            slow = slow.next;
-            if (fast == slow) {
-                break;
-            }
-        }
-
-        fast = head;
-        while (fast != slow) {
-            fast = fast.next;
-            slow = slow.next;
-        }
-        return slow;
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+        return size() > capacity;
     }
 }
