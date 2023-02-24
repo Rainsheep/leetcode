@@ -1,20 +1,30 @@
-class Solution {
+import java.util.ArrayDeque;
 
-    public int maxProduct(int[] nums) {
-        int length = nums.length;
-        int[] max = new int[length];
-        int[] min = new int[length];
-        max[0] = nums[0];
-        min[0] = nums[0];
-        for (int i = 1; i < length; i++) {
-            max[i] = Math.max(max[i - 1] * nums[i], Math.max(nums[i], min[i - 1] * nums[i]));
-            min[i] = Math.min(max[i - 1] * nums[i], Math.min(nums[i], min[i - 1] * nums[i]));
-        }
+class MinStack {
 
-        int ans = max[0];
-        for (int i : max) {
-            ans = Math.max(i, ans);
-        }
-        return ans;
+    ArrayDeque<Integer> stack;
+    ArrayDeque<Integer> min;
+
+    public MinStack() {
+        stack = new ArrayDeque<>();
+        min = new ArrayDeque<>();
+    }
+
+    public void push(int val) {
+        stack.push(val);
+        min.push(Math.min(val, min.isEmpty() ? val : min.getFirst()));
+    }
+
+    public void pop() {
+        stack.pop();
+        min.pop();
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return min.peek();
     }
 }
