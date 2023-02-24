@@ -1,14 +1,13 @@
 class Solution {
 
-    public int majorityElement(int[] nums) {
-        int res = 0;
-        int count = 0;
-        for (int num : nums) {
-            if (count == 0) {
-                res = num;
-            }
-            count += res == num ? 1 : -1;
+    public int rob(int[] nums) {
+        int len = nums.length;
+        int[] dp = new int[len];
+        dp[0] = nums[0];
+        for (int i = 1; i < len; i++) {
+            int t = i >= 2 ? dp[i - 2] : 0;
+            dp[i] = Math.max(t + nums[i], dp[i - 1]);
         }
-        return res;
+        return dp[len - 1];
     }
 }
