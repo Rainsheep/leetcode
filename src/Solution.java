@@ -1,23 +1,63 @@
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 
-class LRUCache extends LinkedHashMap<Integer, Integer> {
+class ListNode {
 
+    int val;
+    ListNode next;
 
-    int capacity;
-
-    public LRUCache(int capacity) {
-        super(capacity, 0.75f, true);
-        this.capacity = capacity;
+    ListNode() {
     }
 
-    public int get(int key) {
-        return this.getOrDefault(key, -1);
+    ListNode(int val) {
+        this.val = val;
     }
 
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
 
-    @Override
-    protected boolean removeEldestEntry(Entry<Integer, Integer> eldest) {
-        return this.size() > capacity;
+class Solution {
+
+    public ListNode sortList(ListNode head) {
+        return sort(head);
+    }
+
+    private ListNode sort(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode fast = head.next, slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        ListNode second = sort(slow.next);
+        slow.next = null;
+        ListNode first = sort(head);
+        return merge(first, second);
+    }
+
+    private ListNode merge(ListNode first, ListNode second) {
+        ListNode head = new ListNode();
+        ListNode p = head;
+        while (first != null && second != null) {
+            if (first.val < second.val) {
+                p.next = first;
+                p = p.next;
+                first = first.next;
+            } else {
+                p.next = second;
+                p = p.next;
+                second = second.next;
+            }
+        }
+
+        if (first == null) {
+            p.next = second;
+        } else {
+            p.next = first;
+        }
+        return head.next;
     }
 }
