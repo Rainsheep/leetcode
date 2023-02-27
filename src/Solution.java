@@ -1,28 +1,22 @@
-class ListNode {
+class Solution {
 
-    ListNode next;
-}
+    public int maxProduct(int[] nums) {
+        int length = nums.length;
+        int[] max = new int[length];
+        int[] min = new int[length];
 
-public class Solution {
+        max[0] = min[0] = nums[0];
 
-    public ListNode detectCycle(ListNode head) {
-        ListNode fast = head, slow = head;
-        while (fast != null && fast.next != null) {
-            fast = fast.next.next;
-            slow = slow.next;
-            if (fast == slow) {
-                break;
-            }
-        }
-        if (fast == null || fast.next == null) {
-            return null;
+        for (int i = 1; i < length; i++) {
+            max[i] = Math.max(nums[i], Math.max(max[i - 1] * nums[i], min[i - 1] * nums[i]));
+            min[i] = Math.min(nums[i], Math.min(max[i - 1] * nums[i], min[i - 1] * nums[i]));
         }
 
-        fast = head;
-        while (fast != slow) {
-            fast = fast.next;
-            slow = slow.next;
+        int ans = max[0];
+        for (int i = 0; i < length; i++) {
+            ans = Math.max(ans, max[i]);
         }
-        return slow;
+
+        return ans;
     }
 }
