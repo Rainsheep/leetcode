@@ -1,48 +1,71 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-class Solution {
+class Trie {
 
-    boolean ans = true;
+    class Node {
 
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        int[] flag = new int[numCourses];
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        for (int[] prerequisite : prerequisites) {
-            List<Integer> list = map.getOrDefault(prerequisite[0], new ArrayList<>());
-            list.add(prerequisite[1]);
-            map.put(prerequisite[0], list);
+        Character c;
+        boolean isNode;
+        Map<Character, Node> list = new HashMap<>();
+
+        public Node(Character c) {
+            this.c = c;
         }
-
-        Set<Integer> keys = map.keySet();
-        for (Integer key : keys) {
-            if (flag[key] == 0) {
-                dfs(key, map, flag);
-            }
-        }
-
-        return ans;
     }
 
-    private void dfs(Integer u, HashMap<Integer, List<Integer>> map, int[] flag) {
-        flag[u] = 1;
-        List<Integer> list = map.get(u);
-        if (list != null) {
-            for (Integer v : list) {
-                if (flag[v] == 0) {
-                    dfs(v, map, flag);
-                    if (!ans) {
-                        return;
-                    }
-                } else if (flag[v] == 1) {
-                    ans = false;
-                    return;
-                }
-            }
-        }
-        flag[u] = 2;
+    Node root;
+
+    public Trie() {
+        this.root = new Node(null);
     }
 
+    public void insert(String word) {
+        Node p = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (p.list.containsKey(c)) {
+                p = p.list.get(c);
+            } else {
+                Node next = new Node(c);
+                p.list.put(c, next);
+                p = next;
+            }
+            if (i == word.length() - 1) {
+                p.isNode = true;
+            }
+        }
+    }
+
+    public boolean search(String word) {
+        Node p = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            if (p.list.containsKey(c)) {
+                p = p.list.get(c);
+            } else {
+                return false;
+            }
+
+            if (i == word.length() - 1) {
+                return p.isNode;
+            }
+        }
+        return true;
+    }
+
+    public boolean startsWith(String prefix) {
+        Node p = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            if (p.list.containsKey(c)) {
+                p = p.list.get(c);
+            } else {
+                return false;
+            }
+        }
+        return true;
+
+    }
 }
+
