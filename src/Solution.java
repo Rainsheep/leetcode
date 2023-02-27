@@ -1,22 +1,21 @@
-class Solution {
+class ListNode {
 
-    public int maxProduct(int[] nums) {
-        int length = nums.length;
-        int[] max = new int[length];
-        int[] min = new int[length];
+    ListNode next;
+}
 
-        max[0] = min[0] = nums[0];
+public class Solution {
 
-        for (int i = 1; i < length; i++) {
-            max[i] = Math.max(nums[i], Math.max(max[i - 1] * nums[i], min[i - 1] * nums[i]));
-            min[i] = Math.min(nums[i], Math.min(max[i - 1] * nums[i], min[i - 1] * nums[i]));
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null) {
+            return null;
         }
 
-        int ans = max[0];
-        for (int i = 0; i < length; i++) {
-            ans = Math.max(ans, max[i]);
+        ListNode pA = headA;
+        ListNode pB = headB;
+        while (pA != pB) {
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
         }
-
-        return ans;
+        return pA;
     }
 }
