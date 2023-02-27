@@ -1,21 +1,18 @@
-class ListNode {
+class Solution {
 
-    ListNode next;
-}
-
-public class Solution {
-
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        if (headA == null || headB == null) {
-            return null;
+    public int majorityElement(int[] nums) {
+        int res = 0;
+        int count = 0;
+        for (int num : nums) {
+            if (count == 0) {
+                res = num;
+                count++;
+            } else if (res == num) {
+                count++;
+            } else {
+                count--;
+            }
         }
-
-        ListNode pA = headA;
-        ListNode pB = headB;
-        while (pA != pB) {
-            pA = pA == null ? headB : pA.next;
-            pB = pB == null ? headA : pB.next;
-        }
-        return pA;
+        return res;
     }
 }
