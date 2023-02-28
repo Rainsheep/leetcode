@@ -1,39 +1,82 @@
-class TreeNode {
+class ListNode {
 
     int val;
-    TreeNode left;
-    TreeNode right;
+    ListNode next;
 
-    TreeNode() {
+    ListNode() {
     }
 
-    TreeNode(int val) {
+    ListNode(int val) {
         this.val = val;
     }
 
-    TreeNode(int val, TreeNode left, TreeNode right) {
+    ListNode(int val, ListNode next) {
         this.val = val;
-        this.left = left;
-        this.right = right;
+        this.next = next;
     }
 }
 
 class Solution {
 
-    public TreeNode invertTree(TreeNode root) {
-        return dfs(root);
+    public boolean isPalindrome(ListNode head) {
+        int len = calcLen(head);
+        if (len <= 1) {
+            return true;
+        }
+        return fun(head, len);
+
+
     }
 
-    private TreeNode dfs(TreeNode root) {
-        if (root == null) {
-            return root;
+    private int calcLen(ListNode head) {
+        ListNode p = head;
+        int res = 0;
+        while (p != null) {
+            res++;
+            p = p.next;
         }
-        dfs(root.left);
-        dfs(root.right);
+        return res;
+    }
 
-        TreeNode t = root.left;
-        root.left = root.right;
-        root.right = t;
-        return root;
+    private boolean fun(ListNode head, int len) {
+        ListNode p = head;
+        int mid = (len + 1) / 2;
+        int i = 0;
+        ListNode pre = null;
+        ListNode next;
+        while (true) {
+            i++;
+            if (i == mid + 1) {
+                break;
+            }
+
+            next = p.next;
+            p.next = pre;
+            pre = p;
+            p = next;
+        }
+        if (len % 2 != 0) {
+            pre = pre.next;
+        }
+
+        return isSame(pre, p);
+
+    }
+
+    private boolean isSame(ListNode pre, ListNode p) {
+        while (true) {
+            if (pre == null && p == null) {
+                return true;
+            }
+            if (pre == null || p == null) {
+                return false;
+            }
+            if (pre.val != p.val) {
+                return false;
+            }
+
+            pre = pre.next;
+            p = p.next;
+        }
     }
 }
