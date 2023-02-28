@@ -1,45 +1,42 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Random;
 
 class Solution {
 
-    boolean ans = true;
-
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        LinkedList<Integer> queue = new LinkedList<>();
-        int[] in = new int[numCourses];
-        int num = 0;
-        for (int[] prerequisite : prerequisites) {
-            List<Integer> list = map.getOrDefault(prerequisite[0], new ArrayList<>());
-            list.add(prerequisite[1]);
-            map.put(prerequisite[0], list);
-            in[prerequisite[1]]++;
-        }
-
-        for (int i = 0; i < numCourses; i++) {
-            if (in[i] == 0) {
-                queue.add(i);
-            }
-        }
-
-        while (!queue.isEmpty()) {
-            num++;
-            Integer top = queue.pop();
-            List<Integer> list = map.get(top);
-            if (list != null) {
-                for (Integer integer : list) {
-                    in[integer]--;
-                    if (in[integer] == 0) {
-                        queue.add(integer);
-                    }
-                }
-            }
-        }
-
-        return num == numCourses;
+    public int findKthLargest(int[] nums, int k) {
+        return quickSelect(nums, 0, nums.length - 1, nums.length - k);
     }
 
+    private int quickSelect(int[] nums, int l, int r, int index) {
+        int k = randomPartition(nums, l, r);
+        if (k == index) {
+            return nums[k];
+        }
+        return k > index ? quickSelect(nums, l, k - 1, index) : quickSelect(nums, k + 1, r, index);
+    }
+
+    private int randomPartition(int[] nums, int l, int r) {
+        int randomIndex = new Random().nextInt(r - l + 1) + l;
+        swap(nums, randomIndex, l);
+        return partition(nums, l, r);
+    }
+
+    private int partition(int[] nums, int l, int r) {
+        int x = nums[l];
+        int mid = l - 1;
+        for (int i = l; i <= r; i++) {
+            if (nums[i] <= x) {
+                swap(nums, ++mid, i);
+            }
+        }
+        swap(nums, l, mid);
+
+        return mid;
+    }
+
+
+    private void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
 }
