@@ -1,82 +1,36 @@
-class ListNode {
+class TreeNode {
 
     int val;
-    ListNode next;
+    TreeNode left;
+    TreeNode right;
 
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
+    TreeNode(int x) {
+        val = x;
     }
 }
 
 class Solution {
 
-    public boolean isPalindrome(ListNode head) {
-        int len = calcLen(head);
-        if (len <= 1) {
-            return true;
-        }
-        return fun(head, len);
+    TreeNode res;
+    int resDeep = 0;
 
-
-    }
-
-    private int calcLen(ListNode head) {
-        ListNode p = head;
-        int res = 0;
-        while (p != null) {
-            res++;
-            p = p.next;
-        }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        res = root;
+        dfs(root, p, q, 0);
         return res;
     }
 
-    private boolean fun(ListNode head, int len) {
-        ListNode p = head;
-        int mid = (len + 1) / 2;
-        int i = 0;
-        ListNode pre = null;
-        ListNode next;
-        while (true) {
-            i++;
-            if (i == mid + 1) {
-                break;
-            }
-
-            next = p.next;
-            p.next = pre;
-            pre = p;
-            p = next;
+    private boolean[] dfs(TreeNode root, TreeNode p, TreeNode q, int deep) {
+        if (root == null) {
+            return new boolean[]{false, false};
         }
-        if (len % 2 != 0) {
-            pre = pre.next;
+        boolean[] bLeft = dfs(root.left, p, q, deep + 1);
+        boolean[] bRight = dfs(root.right, p, q, deep + 1);
+        boolean[] booleans = {bLeft[0] || bRight[0] || root == p, bLeft[1] || bRight[1] || root == q};
+        if (booleans[0] && booleans[1] && deep > resDeep) {
+            res = root;
+            resDeep = deep;
         }
-
-        return isSame(pre, p);
-
-    }
-
-    private boolean isSame(ListNode pre, ListNode p) {
-        while (true) {
-            if (pre == null && p == null) {
-                return true;
-            }
-            if (pre == null || p == null) {
-                return false;
-            }
-            if (pre.val != p.val) {
-                return false;
-            }
-
-            pre = pre.next;
-            p = p.next;
-        }
+        return booleans;
     }
 }
