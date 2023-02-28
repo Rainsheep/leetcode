@@ -1,42 +1,36 @@
-import java.util.Random;
-
 class Solution {
 
-    public int findKthLargest(int[] nums, int k) {
-        return quickSelect(nums, 0, nums.length - 1, nums.length - k);
-    }
-
-    private int quickSelect(int[] nums, int l, int r, int index) {
-        int k = randomPartition(nums, l, r);
-        if (k == index) {
-            return nums[k];
-        }
-        return k > index ? quickSelect(nums, l, k - 1, index) : quickSelect(nums, k + 1, r, index);
-    }
-
-    private int randomPartition(int[] nums, int l, int r) {
-        int randomIndex = new Random().nextInt(r - l + 1) + l;
-        swap(nums, randomIndex, l);
-        return partition(nums, l, r);
-    }
-
-    private int partition(int[] nums, int l, int r) {
-        int x = nums[l];
-        int mid = l - 1;
-        for (int i = l; i <= r; i++) {
-            if (nums[i] <= x) {
-                swap(nums, ++mid, i);
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] left = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    left[i][j] = (j == 0 ? 0 : left[i][j - 1]) + 1;
+                }
             }
         }
-        swap(nums, l, mid);
 
-        return mid;
-    }
+        int ans = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (left[i][j] == 0) {
+                    continue;
+                }
 
-
-    private void swap(int[] a, int i, int j) {
-        int temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
+                int width = left[i][j];
+                int area = width;
+                for (int k = i - 1; k >= 0; k--) {
+                    width = Math.min(width, left[k][j]);
+                    if (width == 0) {
+                        break;
+                    }
+                    area = Math.max(area, (i - k + 1) * width);
+                }
+                ans = Math.max(area, ans);
+            }
+        }
+        return ans;
     }
 }
