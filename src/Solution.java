@@ -1,3 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Arrays;
+
 class Solution {
 
     public int maximalRectangle(char[][] matrix) {
@@ -13,24 +16,26 @@ class Solution {
         }
 
         int ans = 0;
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (left[i][j] == 0) {
-                    continue;
+        int[] up = new int[m];
+        int[] down = new int[m];
+        for (int col = 0; col < n; col++) {
+            Arrays.fill(down, m);
+            ArrayDeque<Integer> stack = new ArrayDeque<>();
+            for (int row = 0; row < m; row++) {
+                while (!stack.isEmpty() && left[stack.peek()][col] >= left[row][col]) {
+                    Integer pop = stack.pop();
+                    down[pop] = row;
                 }
+                up[row] = stack.isEmpty() ? -1 : stack.peek();
+                stack.push(row);
+            }
 
-                int width = left[i][j];
-                int area = width;
-                for (int k = i - 1; k >= 0; k--) {
-                    width = Math.min(width, left[k][j]);
-                    if (width == 0) {
-                        break;
-                    }
-                    area = Math.max(area, (i - k + 1) * width);
-                }
-                ans = Math.max(area, ans);
+            for (int i = 0; i < m; i++) {
+                int area = left[i][col] * (down[i] - up[i] - 1);
+                ans = Math.max(ans, area);
             }
         }
+
         return ans;
     }
 }
