@@ -1,19 +1,28 @@
+import java.util.PriorityQueue;
+
 class Solution {
 
-    public int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] ans = new int[n];
-        ans[0] = nums[0];
-        for (int i = 1; i < n; i++) {
-            ans[i] = ans[i - 1] * nums[i];
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int len = nums.length - k + 1;
+        int[] ans = new int[len];
+        PriorityQueue<int[]> queue = new PriorityQueue<>((o1, o2) -> o2[0] - o1[0]);
+
+        for (int i = 0; i < k; i++) {
+            queue.add(new int[]{nums[i], i});
         }
 
-        int suf = 1;
-        for (int i = n - 1; i >= 0; i--) {
-            ans[i] = (i == 0 ? 1 : ans[i - 1]) * suf;
-            suf *= nums[i];
+        ans[0] = queue.peek()[0];
+
+        for (int i = k; i < nums.length; i++) {
+            queue.add(new int[]{nums[i], i});
+            int peek;
+            while (queue.peek()[1] <= i - k) {
+                queue.poll();
+            }
+            ans[i - k + 1] = queue.peek()[0];
         }
 
         return ans;
+
     }
 }
