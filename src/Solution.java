@@ -1,36 +1,19 @@
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode(int x) {
-        val = x;
-    }
-}
-
 class Solution {
 
-    TreeNode res;
-    int resDeep = 0;
-
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        res = root;
-        dfs(root, p, q, 0);
-        return res;
-    }
-
-    private boolean[] dfs(TreeNode root, TreeNode p, TreeNode q, int deep) {
-        if (root == null) {
-            return new boolean[]{false, false};
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        ans[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            ans[i] = ans[i - 1] * nums[i];
         }
-        boolean[] bLeft = dfs(root.left, p, q, deep + 1);
-        boolean[] bRight = dfs(root.right, p, q, deep + 1);
-        boolean[] booleans = {bLeft[0] || bRight[0] || root == p, bLeft[1] || bRight[1] || root == q};
-        if (booleans[0] && booleans[1] && deep > resDeep) {
-            res = root;
-            resDeep = deep;
+
+        int suf = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            ans[i] = (i == 0 ? 1 : ans[i - 1]) * suf;
+            suf *= nums[i];
         }
-        return booleans;
+
+        return ans;
     }
 }
