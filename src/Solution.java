@@ -1,25 +1,36 @@
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
 
 class Solution {
 
-    public int minMeetingRooms(int[][] intervals) {
-        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
-        PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
-        for (int[] interval : intervals) {
-            if (!queue.isEmpty() && interval[0] >= queue.peek()[1]) {
-                queue.poll();
-            }
-            queue.add(interval);
+    ArrayList<Integer> weights = new ArrayList<>();
+    int space;
+    int[] dp;
+
+    public int numSquares(int n) {
+        fillWeight(n);
+        this.space = n;
+        dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE - 1);
+        dp[0] = 0;
+        for (Integer weight : weights) {
+            complatePack(weight, 1);
         }
-        return queue.size();
+        return dp[n];
     }
 
-    public static void main(String[] args) {
-        int res = new Solution().minMeetingRooms(new int[][]{{0, 30}, {5, 10}, {15, 20}});
-        System.out.println(res == 2);
-        res = new Solution().minMeetingRooms(new int[][]{{7, 10}, {2, 4}});
-        System.out.println(res == 1);
+    private void complatePack(int weight, int value) {
+        for (int i = weight; i <= space; i++) {
+            dp[i] = Math.min(dp[i], dp[i - weight] + value);
+        }
     }
+
+    private void fillWeight(int n) {
+        int i = 1;
+        while (i * i <= n) {
+            weights.add(i * i);
+            i++;
+        }
+    }
+
 }
