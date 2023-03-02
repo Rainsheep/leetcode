@@ -1,21 +1,20 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class Solution {
 
     public int lengthOfLIS(int[] nums) {
-        int n = nums.length;
-        int[] dp = new int[n];
-        int res = 1;
-        Arrays.fill(dp, 1);
-
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < i; j++) {
-                if (nums[i] > nums[j]) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                    res = Math.max(res, dp[i]);
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            if (list.isEmpty() || num > list.get(list.size() - 1)) {
+                list.add(num);
+            } else {
+                int index = Collections.binarySearch(list, num);
+                if (index < 0) {
+                    list.set(-index - 1, num);
                 }
             }
         }
-        return res;
+        return list.size();
     }
 }
