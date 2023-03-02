@@ -1,25 +1,18 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
 class Solution {
 
-    public int minMeetingRooms(int[][] intervals) {
-        Arrays.sort(intervals, Comparator.comparingInt(value -> value[0]));
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
-        for (int[] interval : intervals) {
-            if (!queue.isEmpty() && interval[0] >= queue.peek()) {
-                queue.poll();
-            }
-            queue.add(interval[1]);
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        ans[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            ans[i] = nums[i] * ans[i - 1];
         }
-        return queue.size();
-    }
 
-    public static void main(String[] args) {
-        int res = new Solution().minMeetingRooms(new int[][]{{0, 30}, {5, 10}, {15, 20}});
-        System.out.println(res == 2);
-        res = new Solution().minMeetingRooms(new int[][]{{7, 10}, {2, 4}});
-        System.out.println(res == 1);
+        int suf = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            ans[i] = (i == 0 ? 1 : ans[i - 1]) * suf;
+            suf *= nums[i];
+        }
+        return ans;
     }
 }
