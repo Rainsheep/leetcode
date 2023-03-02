@@ -1,32 +1,22 @@
-import java.util.LinkedList;
-
 class Solution {
 
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        int len = nums.length;
-        int[] res = new int[len - k + 1];
-        LinkedList<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < k; i++) {
-            while (!queue.isEmpty() && nums[i] >= nums[queue.peekLast()]) {
-                queue.removeLast();
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int x = 0;
+        int y = n - 1;
+        while (true) {
+            if (x == m || y < 0) {
+                return false;
             }
-            queue.add(i);
+            if (matrix[x][y] == target) {
+                return true;
+            } else if (matrix[x][y] > target) {
+                y--;
+            } else {
+                x++;
+            }
         }
-        res[0] = nums[queue.peek()];
-        for (int i = k; i < len; i++) {
-            if (queue.peek() < i - k + 1) {
-                queue.pop();
-            }
-            while (!queue.isEmpty() && nums[i] >= nums[queue.peekLast()]) {
-                queue.removeLast();
-            }
-            queue.add(i);
-
-            res[i - k + 1] = nums[queue.peek()];
-        }
-
-        return res;
-
-
     }
+
 }
