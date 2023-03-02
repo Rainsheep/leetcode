@@ -1,36 +1,18 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 class Solution {
 
-    ArrayList<Integer> weights = new ArrayList<>();
-    int space;
-    int[] dp;
-
-    public int numSquares(int n) {
-        fillWeight(n);
-        this.space = n;
-        dp = new int[n + 1];
-        Arrays.fill(dp, Integer.MAX_VALUE - 1);
-        dp[0] = 0;
-        for (Integer weight : weights) {
-            complatePack(weight, 1);
+    public void moveZeroes(int[] nums) {
+        int l = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
+                swap(nums, i, l++);
+            }
         }
-        return dp[n];
+
     }
 
-    private void complatePack(int weight, int value) {
-        for (int i = weight; i <= space; i++) {
-            dp[i] = Math.min(dp[i], dp[i - weight] + value);
-        }
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
-
-    private void fillWeight(int n) {
-        int i = 1;
-        while (i * i <= n) {
-            weights.add(i * i);
-            i++;
-        }
-    }
-
 }
