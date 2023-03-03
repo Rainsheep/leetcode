@@ -1,20 +1,26 @@
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 class Solution {
 
-    public int lengthOfLIS(int[] nums) {
-        ArrayList<Integer> list = new ArrayList<>();
-        for (int num : nums) {
-            if (list.isEmpty() || num > list.get(list.size() - 1)) {
-                list.add(num);
-            } else {
-                int index = Collections.binarySearch(list, num);
-                if (index < 0) {
-                    list.set(-index - 1, num);
-                }
-            }
+    int space;
+    int[] dp;
+
+    public int numSquares(int n) {
+        space = n;
+        dp = new int[space + 1];
+        int sqrt = (int) Math.sqrt(n);
+        Arrays.fill(dp, Integer.MAX_VALUE - 1);
+        dp[0] = 0;
+        for (int i = 1; i <= sqrt; i++) {
+            completePack(i * i, 1);
         }
-        return list.size();
+
+        return dp[space];
+    }
+
+    private void completePack(int weight, int value) {
+        for (int i = weight; i <= space; i++) {
+            dp[i] = Math.min(dp[i], dp[i - weight] + value);
+        }
     }
 }
