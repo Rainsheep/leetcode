@@ -1,26 +1,24 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class Solution {
 
-    int space;
-    int[] dp;
-
-    public int numSquares(int n) {
-        space = n;
-        dp = new int[space + 1];
-        int sqrt = (int) Math.sqrt(n);
-        Arrays.fill(dp, Integer.MAX_VALUE - 1);
-        dp[0] = 0;
-        for (int i = 1; i <= sqrt; i++) {
-            completePack(i * i, 1);
+    public int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            if (list.isEmpty() || num > list.get(list.size() - 1)) {
+                list.add(num);
+            } else {
+                list.set(findIndex(list, num), num);
+            }
         }
 
-        return dp[space];
+        return list.size();
     }
 
-    private void completePack(int weight, int value) {
-        for (int i = weight; i <= space; i++) {
-            dp[i] = Math.min(dp[i], dp[i - weight] + value);
-        }
+    private int findIndex(List<Integer> list, int target) {
+        int index = Collections.binarySearch(list, target);
+        return index >= 0 ? index : -index - 1;
     }
 }
