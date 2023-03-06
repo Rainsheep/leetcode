@@ -21,11 +21,11 @@ class Solution {
             }
         }
 
-        tryDelete(s, lremove, rremove);
+        tryDelete(s, 0, lremove, rremove);
         return new ArrayList<>(ans);
     }
 
-    private void tryDelete(String s, int lremove, int rremove) {
+    private void tryDelete(String s, int start, int lremove, int rremove) {
         if (lremove == 0 && rremove == 0) {
             boolean vail = isVail(s);
             if (vail) {
@@ -35,21 +35,22 @@ class Solution {
             }
         }
 
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = start; i < s.length(); i++) {
             if (i != 0 && s.charAt(i) == s.charAt(i - 1)) {
                 continue;
             }
+
             if (s.length() - i < lremove + rremove) {
                 continue;
             }
 
             if (s.charAt(i) == '(') {
                 if (lremove > 0) {
-                    tryDelete(s.substring(0, i) + s.substring(i + 1), lremove - 1, rremove);
+                    tryDelete(s.substring(0, i) + s.substring(i + 1), i, lremove - 1, rremove);
                 }
             } else if (s.charAt(i) == ')') {
                 if (rremove > 0) {
-                    tryDelete(s.substring(0, i) + s.substring(i + 1), lremove, rremove - 1);
+                    tryDelete(s.substring(0, i) + s.substring(i + 1), i, lremove, rremove - 1);
                 }
             }
         }
