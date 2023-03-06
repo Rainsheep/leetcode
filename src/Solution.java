@@ -2,9 +2,7 @@ import java.util.Arrays;
 
 class Solution {
 
-    public int maxProfit(int[] prices) {
-        int k = 2;
-
+    public int maxProfit(int k, int[] prices) {
         int[] buys = new int[k];
         int[] sells = new int[k];
         Arrays.fill(buys, -prices[0]);
