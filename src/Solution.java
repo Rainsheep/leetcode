@@ -1,22 +1,25 @@
+import java.util.Arrays;
+
 class Solution {
 
-    public int maxCoins(int[] nums) {
-        int n = nums.length + 2;
-        int[] val = new int[n];
-        System.arraycopy(nums, 0, val, 1, nums.length);
-        val[0] = val[n - 1] = 1;
-        int[][] dp = new int[n][n];
-        for (int i = n - 3; i >= 0; i--) {
-            for (int j = i + 2; j < n; j++) {
-                for (int k = i + 1; k < j; k++) {
-                    int sum = val[i] * val[k] * val[j];
-                    sum += dp[i][k] + dp[k][j];
-                    dp[i][j] = Math.max(dp[i][j], sum);
-                }
-            }
-        }
+    int space;
+    int[] dp;
 
-        return dp[0][n - 1];
+    public int coinChange(int[] coins, int amount) {
+        this.space = amount;
+        dp = new int[space + 1];
+        int defaultMax = Integer.MAX_VALUE - 1;
+        Arrays.fill(dp, defaultMax);
+        dp[0] = 0;
+        for (int coin : coins) {
+            completePack(coin, 1);
+        }
+        return dp[space] == defaultMax ? -1 : dp[space];
     }
 
+    private void completePack(int weight, int value) {
+        for (int i = weight; i <= space; i++) {
+            dp[i] = Math.min(dp[i], dp[i - weight] + value);
+        }
+    }
 }
