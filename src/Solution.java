@@ -1,21 +1,40 @@
+class TreeNode {
+
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
 class Solution {
 
-    public int rob(int[] nums) {
-        int n = nums.length;
-        if (n == 1) {
-            return nums[0];
-        }
-        int[] dp = new int[n];
-        int[] dpNo1 = new int[n];
-        for (int i = 0; i < n; i++) {
-            dp[i] = Math.max(i >= 1 ? dp[i - 1] : 0, (i >= 2 ? dp[i - 2] : 0) + nums[i]);
-        }
-        for (int i = 1; i < n; i++) {
-            dpNo1[i] = Math.max(dpNo1[i - 1], (i >= 2 ? dpNo1[i - 2] : 0) + nums[i]);
-        }
-        boolean selece = dp[n - 1] != dpNo1[n - 1];
-        int res = selece ? dp[n - 2] : dp[n - 1];
-        return Math.max(res, dpNo1[n - 1]);
+    public int rob(TreeNode root) {
+        int[] res = dfs(root);
+        return Math.max(res[0], res[1]);
 
+    }
+
+    private int[] dfs(TreeNode root) {
+        if (root == null) {
+            return new int[]{0, 0};
+        }
+        int[] res = new int[2];
+        int[] left = dfs(root.left);
+        int[] right = dfs(root.right);
+        res[0] = left[1] + right[1] + root.val;
+        res[1] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        return res;
     }
 }
