@@ -1,40 +1,13 @@
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(int val) {
-        this.val = val;
-    }
-
-    TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
 class Solution {
 
-    public int rob(TreeNode root) {
-        int[] res = dfs(root);
-        return Math.max(res[0], res[1]);
-
-    }
-
-    private int[] dfs(TreeNode root) {
-        if (root == null) {
-            return new int[]{0, 0};
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[][] dp = new int[n][2];
+        dp[0][0] = -prices[0];
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], -prices[i] + (i >= 2 ? dp[i - 2][1] : 0));
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] + prices[i]);
         }
-        int[] res = new int[2];
-        int[] left = dfs(root.left);
-        int[] right = dfs(root.right);
-        res[0] = left[1] + right[1] + root.val;
-        res[1] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
-        return res;
+        return dp[n - 1][1];
     }
 }
