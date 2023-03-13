@@ -1,61 +1,57 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Random;
 
 class Solution {
 
-    HashMap<String, String> father = new HashMap<>();
-    HashMap<String, Double> multiple = new HashMap<>();
+    int[] ans;
+    int ansLen;
+    HashMap<Integer, Integer> map;
 
-    private void merge(String a, String b, double val) {
-        // a/b=val
-        String father1 = findFather(a);
-        String father2 = findFather(b);
-        if (!father1.equals(father2)) {
-            father.put(father1, father2);
-            multiple.put(father1, val * multiple.get(b) / multiple.get(a));
-        }
-    }
-
-    private String findFather(String s) {
-        String p = this.father.get(s);
-        if (p == null || s.equals(p)) {
-            return s;
+    public int[] topKFrequent(int[] nums, int k) {
+        map = new HashMap<>();
+        ansLen = 0;
+        ans = new int[k];
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
         }
 
-        String pp = findFather(p);
-        // 压缩的同时更新倍数
-        multiple.put(s, multiple.get(s) * multiple.get(p));
-        father.put(s, pp);
-        return pp;
-    }
+        ArrayList<Integer> list = new ArrayList<>(map.size());
 
-    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
-
-        int i = 0;
-        for (List<String> equation : equations) {
-            for (String s : equation) {
-                if (!father.containsKey(s)) {
-                    father.put(s, s);
-                    multiple.put(s, 1.0);
-                }
-
-            }
-            merge(equation.get(0), equation.get(1), values[i++]);
+        for (Entry<Integer, Integer> entry : map.entrySet()) {
+            list.add(entry.getKey());
         }
 
-        double[] ans = new double[queries.size()];
-        i = 0;
-        for (List<String> query : queries) {
-            String a = findFather(query.get(0));
-            String b = findFather(query.get(1));
-
-            if (multiple.get(query.get(0)) == null) {
-                ans[i++] = -1.0;
-            } else {
-                ans[i++] = a.equals(b) ? multiple.get(query.get(0)) / multiple.get(query.get(1)) : -1.0;
-            }
-
-        }
+        qsort(list, 0, list.size() - 1, k);
         return ans;
+    }
+
+    private void qsort(List<Integer> list, int start, int end, int k) {
+        int pickIndex = new Random().nextInt(end - start + 1) + start;
+        int pickVal = list.get(pickIndex);
+        int index = start;
+        for (int i = start; i <= end; i++) {
+            if (map.get(list.get(i)) >= map.get(pickVal)) {
+                Collections.swap(list, i, index++);
+            }
+        }
+
+        if (k == index - start) {
+            addToAns(list, start, index);
+        } else if (index - start > k) {
+            qsort(list, start, index - 1, k);
+        } else {
+            addToAns(list, start, index);
+            qsort(list, index, end, k - (index - start));
+        }
+    }
+
+    private void addToAns(List<Integer> list, int start, int end) {
+        for (int i = start; i < end; i++) {
+            ans[ansLen++] = list.get(i);
+        }
     }
 }
