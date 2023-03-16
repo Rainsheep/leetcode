@@ -1,22 +1,40 @@
+class TreeNode {
+
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
 class Solution {
 
-    public int findTargetSumWays(int[] nums, int target) {
-        int sum = 0;
-        for (int num : nums) {
-            sum += num;
+    public TreeNode convertBST(TreeNode root) {
+        dfs(root, 0);
+        return root;
+
+    }
+
+    private int dfs(TreeNode root, int parentVal) {
+        if (root == null) {
+            return parentVal;
         }
-        sum -= target;
-        if (sum < 0 || sum % 2 != 0) {
-            return 0;
-        }
-        sum /= 2;
-        int[] dp = new int[sum + 1];
-        dp[0] = 1;
-        for (int num : nums) {
-            for (int i = sum; i >= num; i--) {
-                dp[i] += dp[i - num];
-            }
-        }
-        return dp[sum];
+        int rootVal = root.val;
+        int rightVal = dfs(root.right, parentVal);
+        root.val = rightVal + rootVal;
+        int leftVal = dfs(root.left, root.val);
+
+        return leftVal;
     }
 }
