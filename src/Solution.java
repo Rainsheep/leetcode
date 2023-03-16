@@ -1,24 +1,22 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
 
-    public int findTargetSumWays(int[] nums, int target) {
-        int sum = 0;
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        int n = nums.length;
         for (int num : nums) {
-            sum += num;
+            int index = (num - 1 + n) % n;
+            nums[index] += n;
         }
-        sum -= target;
-        if (sum < 0 || sum % 2 != 0) {
-            return 0;
-        }
-        sum /= 2;
-        int[] dp = new int[sum + 1];
-        dp[0] = 1;
 
-        for (int num : nums) {
-            for (int i = sum; i >= num; i--) {
-                dp[i] += dp[i - num];
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= n) {
+                list.add(i + 1);
             }
         }
-        return dp[sum];
-    }
+        return list;
 
+    }
 }
