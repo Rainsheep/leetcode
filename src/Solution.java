@@ -20,21 +20,20 @@ class TreeNode {
 
 class Solution {
 
-    public TreeNode convertBST(TreeNode root) {
-        dfs(root, 0);
-        return root;
+    int ans = 0;
 
+    public int diameterOfBinaryTree(TreeNode root) {
+        dfs(root);
+        return ans;
     }
 
-    private int dfs(TreeNode root, int parentVal) {
+    private int dfs(TreeNode root) {
         if (root == null) {
-            return parentVal;
+            return 0;
         }
-        int rootVal = root.val;
-        int rightVal = dfs(root.right, parentVal);
-        root.val = rightVal + rootVal;
-        int leftVal = dfs(root.left, root.val);
-
-        return leftVal;
+        int left = dfs(root.left);
+        int right = dfs(root.right);
+        ans = Math.max(ans, left + right);
+        return Math.max(left, right) + 1;
     }
 }
