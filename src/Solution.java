@@ -1,46 +1,65 @@
+import java.util.ArrayList;
+
 class Solution {
 
-    int[][] flag;
+    public String longestPalindrome(String s) {
+        int start = 0, end = -1;
+        s = wrapperStr(s);
+        ArrayList<Integer> list = new ArrayList<>();
+        int right = -1, cid = -1;
+        for (int i = 0; i < s.length(); i++) {
+            int currentArmLen;
+            if (i <= right) {
+                int armLen = Math.min(list.get(2 * cid - i), right - i);
+                currentArmLen = expand(s, i - armLen, i + armLen);
+            } else {
+                currentArmLen = expand(s, i, i);
+            }
+            list.add(currentArmLen);
 
-    public int countSubstrings(String s) {
-        int n = s.length();
-        int ans = 0;
-        flag = new int[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j <= i; j++) {
-                if (isVail(s, j, i)) {
-                    ans++;
-                }
+            if (i + currentArmLen > right) {
+                cid = i;
+                right = i + currentArmLen;
+            }
+            if (currentArmLen * 2 + 1 > end - start) {
+                start = i - currentArmLen;
+                end = i + currentArmLen;
             }
         }
-        return ans;
+
+        return getAns(s, start, end);
+
     }
 
-    private boolean isVail(String s, int begin, int end) {
-        if (flag[begin][end] == 1) {
-            return true;
+    private String wrapperStr(String s) {
+        StringBuilder sb = new StringBuilder("#");
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            sb.append("#");
         }
-        if (flag[begin][end] == 2) {
-            return false;
-        }
+        return sb.toString();
+    }
 
-        if (end <= begin) {
-            if (begin == end) {
-                flag[begin][end] = 1;
+    private String getAns(String s, int start, int end) {
+        StringBuilder ans = new StringBuilder();
+        for (int i = start; i <= end; ++i) {
+            if (s.charAt(i) != '#') {
+                ans.append(s.charAt(i));
             }
-            return true;
         }
+        return ans.toString();
+    }
 
-        boolean b = s.charAt(begin) == s.charAt(end);
-        if (!b) {
-            flag[begin][end] = 2;
-            return false;
+    public int expand(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
         }
-        flag[begin][end] = isVail(s, begin + 1, end - 1) ? 1 : 2;
-        return flag[begin][end] == 1;
+        return (right - left - 2) / 2;
     }
 
     public static void main(String[] args) {
-        System.out.println(new Solution().countSubstrings("ab"));
+        new Solution().longestPalindrome("babad");
     }
+
 }
