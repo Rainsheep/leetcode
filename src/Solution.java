@@ -1,43 +1,23 @@
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 
 class Solution {
 
-    public int countSubstrings(String s) {
-        int ans = 0;
-        s = wrapperStr(s);
-        int cid = -1, right = -1;
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(1);
-        for (int i = 1; i < s.length() - 1; i++) {
-            int armLen = i <= right ? Math.min(list.get(2 * cid - i), right - i + 1) : 1;
-            while (s.charAt(i + armLen) == s.charAt(i - armLen)) {
-                armLen++;
+    public int[] dailyTemperatures(int[] temperatures) {
+        int len = temperatures.length;
+        int[] ans = new int[len];
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < len; i++) {
+            if (stack.isEmpty() || temperatures[stack.peek()] >= temperatures[i]) {
+                stack.push(i);
+            } else {
+                while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
+                    Integer index = stack.poll();
+                    ans[index] = i - index;
+                }
+                stack.push(i);
             }
-            list.add(armLen);
-
-            if (i + armLen - 1 > right) {
-                cid = i;
-                right = i + armLen - 1;
-            }
-
-            // System.out.println(i + " " + armLen / 2);
-            ans += armLen / 2;
         }
 
         return ans;
-    }
-
-    public String wrapperStr(String s) {
-        StringBuilder sb = new StringBuilder("^#");
-        for (int i = 0; i < s.length(); i++) {
-            sb.append(s.charAt(i));
-            sb.append("#");
-        }
-        sb.append("$");
-        return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new Solution().countSubstrings("aba"));
     }
 }
