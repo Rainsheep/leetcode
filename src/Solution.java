@@ -1,62 +1,29 @@
-import java.util.ArrayList;
-
 class Solution {
 
-    public String longestPalindrome(String s) {
-        s = dealStr(s);
-        int len = s.length();
-        ArrayList<Integer> list = new ArrayList<>(len);
-        int cid = -1, right = -1;
-        int armLen;
-        int begin = 0, end = 0, maxArmLen = 0;
-        for (int i = 0; i < len; i++) {
-            if (i <= right) {
-                armLen = Math.min(list.get(2 * cid - i), right - i + 1);
-            } else {
-                armLen = 1;
-            }
-            armLen = expend(s, i - armLen + 1, i + armLen - 1);
-            list.add(armLen);
+    public boolean isMatch(String s, String p) {
+        int sLen = s.length();
+        int pLen = p.length();
+        boolean[][] dp = new boolean[sLen + 1][pLen + 1];
 
-            if (i + armLen - 1 > right) {
-                right = i + armLen - 1;
-                cid = i;
-            }
-
-            if (armLen > maxArmLen) {
-                maxArmLen = armLen;
-                begin = i - armLen + 1;
-                end = i + armLen;
-            }
-
-        }
-
-        // System.out.println(list);
-
-        StringBuilder ans = new StringBuilder();
-        for (int i = begin; i < end; i++) {
-            if (s.charAt(i) != '#') {
-                ans.append(s.charAt(i));
+        dp[0][0] = true;
+        for (int i = 0; i <= sLen; i++) {
+            for (int j = 1; j <= pLen; j++) {
+                if (p.charAt(j - 1) == '*') {
+                    dp[i][j] =
+                            dp[i][j - 2] || (i >= 1 && dp[i - 1][j] && isMatchChar(s.charAt(i - 1), p.charAt(j - 2)));
+                } else {
+                    dp[i][j] = i != 0 && (dp[i - 1][j - 1] && isMatchChar(s.charAt(i - 1), p.charAt(j - 1)));
+                }
             }
         }
-
-        return ans.toString();
+        return dp[sLen][pLen];
     }
 
-    private String dealStr(String s) {
-        StringBuilder sb = new StringBuilder("#");
-        for (int i = 0; i < s.length(); i++) {
-            sb.append(s.charAt(i));
-            sb.append("#");
-        }
-        return sb.toString();
+    private boolean isMatchChar(char a, char b) {
+        return b == '.' || a == b;
     }
 
-    private int expend(String s, int left, int right) {
-        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-            left--;
-            right++;
-        }
-        return (right - left - 1) / 2 + 1;
+    public static void main(String[] args) {
+        new Solution().isMatch("mississippi", "mis*is*p*");
     }
 }
