@@ -19,19 +19,20 @@ class ListNode {
 
 class Solution {
 
-    public ListNode swapPairs(ListNode head) {
-        int n = 2;
+    public ListNode reverseKGroup(ListNode head, int k) {
         ListNode ans = new ListNode();
         ListNode pre = ans;
         ans.next = head;
         while (pre != null && pre.next != null) {
-            ListNode[] listNodes = convertList(pre.next, n);
+            ListNode[] listNodes = convertList(pre.next, k);
             pre.next = listNodes[0];
             pre = listNodes[1];
         }
 
         return ans.next;
+
     }
+
 
     private ListNode findTail(ListNode head, int n) {
         n = n - 1;
