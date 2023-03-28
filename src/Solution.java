@@ -1,41 +1,71 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+class ListNode {
+
+    int val;
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(int val) {
+        this.val = val;
+    }
+
+    ListNode(int val, ListNode next) {
+        this.val = val;
+        this.next = next;
+    }
+}
 
 class Solution {
 
-    public List<List<Integer>> threeSum(int[] nums) {
-        ArrayList<List<Integer>> ans = new ArrayList<>();
-        Arrays.sort(nums);
+    public ListNode swapPairs(ListNode head) {
+        int n = 2;
+        ListNode ans = new ListNode();
+        ListNode pre = ans;
+        ans.next = head;
+        while (pre != null && pre.next != null) {
+            ListNode[] listNodes = convertList(pre.next, n);
+            pre.next = listNodes[0];
+            pre = listNodes[1];
+        }
 
-        for (int i = 0; i < nums.length; i++) {
-            if (i != 0 && nums[i] == nums[i - 1]) {
-                continue;
+        return ans.next;
+    }
+
+    private ListNode findTail(ListNode head, int n) {
+        n = n - 1;
+        while (n-- > 0) {
+            if (head == null) {
+                break;
             }
-            int left = i + 1;
-            int right = nums.length - 1;
-            while (left < right) {
-                if (left != i + 1 && nums[left] == nums[left - 1]) {
-                    left++;
-                    continue;
-                }
-                if (nums[i] + nums[left] + nums[right] == 0) {
-                    ArrayList<Integer> t = new ArrayList<>();
-                    t.add(nums[i]);
-                    t.add(nums[left]);
-                    t.add(nums[right]);
-                    ans.add(t);
-                    left++;
-                    right--;
-                } else if (nums[i] + nums[left] + nums[right] > 0) {
-                    right--;
-                } else {
-                    left++;
-                }
+            head = head.next;
+        }
+        return head;
+    }
+
+    private ListNode[] convertList(ListNode head, int k) {
+        ListNode tail = findTail(head, k);
+
+        if (tail == null) {
+            return new ListNode[]{head, null};
+        }
+
+        ListNode p = head;
+        ListNode pre = null;
+        ListNode next = p.next;
+
+        while (k-- > 0) {
+            p.next = pre;
+            pre = p;
+            p = next;
+            if (p != null) {
+                next = p.next;
             }
 
         }
+        head.next = p;
 
-        return ans;
+        return new ListNode[]{pre, head};
     }
 }
