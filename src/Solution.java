@@ -1,72 +1,43 @@
-
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
+import java.util.ArrayList;
 
 class Solution {
 
-    public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode ans = new ListNode();
-        ListNode pre = ans;
-        ans.next = head;
-        while (pre != null && pre.next != null) {
-            ListNode[] listNodes = convertList(pre.next, k);
-            pre.next = listNodes[0];
-            pre = listNodes[1];
-        }
-
-        return ans.next;
-
-    }
-
-
-    private ListNode findTail(ListNode head, int n) {
-        n = n - 1;
-        while (n-- > 0) {
-            if (head == null) {
-                break;
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE) {
+            if (divisor == -1) {
+                return Integer.MAX_VALUE;
             }
-            head = head.next;
-        }
-        return head;
-    }
-
-    private ListNode[] convertList(ListNode head, int k) {
-        ListNode tail = findTail(head, k);
-
-        if (tail == null) {
-            return new ListNode[]{head, null};
-        }
-
-        ListNode p = head;
-        ListNode pre = null;
-        ListNode next = p.next;
-
-        while (k-- > 0) {
-            p.next = pre;
-            pre = p;
-            p = next;
-            if (p != null) {
-                next = p.next;
+            if (divisor == 1) {
+                return Integer.MIN_VALUE;
             }
 
         }
-        head.next = p;
 
-        return new ListNode[]{pre, head};
+        int resFlag = (dividend ^ divisor) >>> 31 == 1 ? -1 : 1;
+
+        if (dividend > 0) {
+            dividend = -dividend;
+        }
+        if (divisor > 0) {
+            divisor = -divisor;
+        }
+
+        int ans = 0;
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(divisor);
+        int t = 1;
+        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
+            list.add(list.get(list.size() - 1) * 2);
+            t <<= 1;
+        }
+
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (dividend <= list.get(i)) {
+                dividend -= list.get(i);
+                ans += t;
+            }
+            t >>= 1;
+        }
+        return ans * resFlag;
     }
 }
