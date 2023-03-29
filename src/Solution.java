@@ -1,43 +1,34 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 
 class Solution {
 
-    public int divide(int dividend, int divisor) {
-        if (dividend == Integer.MIN_VALUE) {
-            if (divisor == -1) {
-                return Integer.MAX_VALUE;
+    public void nextPermutation(int[] nums) {
+        int index = -1;
+        for (int i = nums.length - 1; i > 0; i--) {
+            if (nums[i] > nums[i - 1]) {
+                index = i - 1;
+                break;
             }
-            if (divisor == 1) {
-                return Integer.MIN_VALUE;
+        }
+        if (index == -1) {
+            Arrays.sort(nums);
+            return;
+        }
+
+        for (int i = nums.length - 1; i > index; i--) {
+            if (nums[i] > nums[index]) {
+                swap(nums, i, index);
+                break;
             }
-
         }
 
-        int resFlag = (dividend ^ divisor) >>> 31 == 1 ? -1 : 1;
+        Arrays.sort(nums, index + 1, nums.length);
 
-        if (dividend > 0) {
-            dividend = -dividend;
-        }
-        if (divisor > 0) {
-            divisor = -divisor;
-        }
+    }
 
-        int ans = 0;
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(divisor);
-        int t = 1;
-        while (dividend - list.get(list.size() - 1) <= list.get(list.size() - 1)) {
-            list.add(list.get(list.size() - 1) * 2);
-            t <<= 1;
-        }
-
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (dividend <= list.get(i)) {
-                dividend -= list.get(i);
-                ans += t;
-            }
-            t >>= 1;
-        }
-        return ans * resFlag;
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 }
