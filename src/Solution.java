@@ -1,30 +1,26 @@
 class Solution {
 
-    public int[] searchRange(int[] nums, int target) {
-        return new int[]{binarySearch(nums, target, true), binarySearch(nums, target, false)};
+    public int firstMissingPositive(int[] nums) {
+        int len = nums.length;
+        for (int i = 0; i < len; i++) {
+            int index = nums[i] - 1;
+            while (index >= 0 && index < len && nums[i] != nums[index]) {
+                swap(nums, index, i);
+                index = nums[i] - 1;
+            }
+        }
 
+        for (int i = 0; i < len; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+        return len + 1;
     }
 
-    public int binarySearch(int[] nums, int target, boolean isLower) {
-        int left = 0;
-        int right = nums.length - 1;
-        int ans = -1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            if (nums[mid] == target) {
-                ans = mid;
-                if (isLower) {
-                    right = mid - 1;
-                } else {
-                    left = mid + 1;
-                }
-            } else if (nums[mid] < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-
-        }
-        return ans;
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
     }
 }
