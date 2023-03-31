@@ -1,34 +1,27 @@
-import java.util.Arrays;
-
 class Solution {
 
-    public void nextPermutation(int[] nums) {
-        int index = -1;
-        for (int i = nums.length - 1; i > 0; i--) {
-            if (nums[i] > nums[i - 1]) {
-                index = i - 1;
-                break;
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (target == nums[mid]) {
+                return mid;
+            }
+
+            if (nums[mid] >= nums[left] && target >= nums[left] && target <= nums[mid]) {
+                right = mid - 1;
+            } else if (nums[mid] < nums[left] && (target <= nums[mid] || target >= nums[left])) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
             }
         }
-        if (index == -1) {
-            Arrays.sort(nums);
-            return;
-        }
-
-        for (int i = nums.length - 1; i > index; i--) {
-            if (nums[i] > nums[index]) {
-                swap(nums, i, index);
-                break;
-            }
-        }
-
-        Arrays.sort(nums, index + 1, nums.length);
-
+        return -1;
     }
 
-    private void swap(int[] nums, int i, int j) {
-        int t = nums[i];
-        nums[i] = nums[j];
-        nums[j] = t;
+    public static void main(String[] args) {
+        System.out.println(new Solution().search(new int[]{5, 1, 3}, 5));
     }
 }
