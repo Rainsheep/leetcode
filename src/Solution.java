@@ -1,21 +1,48 @@
+import java.util.ArrayList;
+
 class Solution {
-    public int trap(int[] height) {
-        int n = height.length;
-        int[] leftMax = new int[n];
-        int[] rightMax = new int[n];
-        for (int i = 0; i < n; i++) {
-            leftMax[i] = i == 0 ? height[i] : Math.max(leftMax[i - 1], height[i]);
+    public String multiply(String num1, String num2) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        int num2Len = num2.length();
+        int num1Len = num1.length();
+        for (int i = num2Len - 1; i >= 0; i--) {
+            for (int j = num1Len - 1; j >= 0; j--) {
+                int num = (num2.charAt(i) - '0') * (num1.charAt(j) - '0');
+                int index = num2Len - 1 - i + num1Len - 1 - j;
+                insert(index, num, ans);
+            }
         }
 
-        for (int i = n - 1; i >= 0; i--) {
-            rightMax[i] = i == n - 1 ? height[i] : Math.max(rightMax[i + 1], height[i]);
+        int t = 0;
+        for (int i = 0; i < ans.size(); i++) {
+            int now = ans.get(i);
+            ans.set(i, (now + t) % 10);
+            t = (now + t) / 10;
         }
 
-        int ans = 0;
-        for (int i = 0; i < n; i++) {
-            ans += Math.max(leftMax[i], rightMax[i]) - height[i];
+        while (t != 0) {
+            ans.add(t % 10);
+            t /= 10;
         }
-        return ans;
 
+        StringBuilder sb = new StringBuilder();
+        boolean flag = true;
+        for (int i = ans.size() - 1; i >= 0; i--) {
+            if (flag && ans.get(i) == 0) {
+                continue;
+            }
+            flag = false;
+            sb.append(ans.get(i));
+        }
+        return sb.toString().length() == 0 ? "0" : sb.toString();
+
+    }
+
+    private void insert(int index, int num, ArrayList<Integer> list) {
+        if (index == list.size()) {
+            list.add(num);
+        } else {
+            list.set(index, list.get(index) + num);
+        }
     }
 }
