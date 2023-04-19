@@ -1,48 +1,46 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 
 class Solution {
-    public String multiply(String num1, String num2) {
-        ArrayList<Integer> ans = new ArrayList<>();
-        int num2Len = num2.length();
-        int num1Len = num1.length();
-        for (int i = num2Len - 1; i >= 0; i--) {
-            for (int j = num1Len - 1; j >= 0; j--) {
-                int num = (num2.charAt(i) - '0') * (num1.charAt(j) - '0');
-                int index = num2Len - 1 - i + num1Len - 1 - j;
-                insert(index, num, ans);
+    public boolean isMatch(String s, String p) {
+        int sLen = s.length();
+        int pLen = p.length();
+        boolean[][] dp = new boolean[sLen + 1][pLen + 1];
+        // i==0
+        for (int i = 1; i <= pLen; i++) {
+            if (p.charAt(i - 1) == '*') {
+                dp[0][i] = true;
+            } else {
+                break;
+            }
+        }
+        // j==0
+        for (int i = 1; i <= sLen; i++) {
+            dp[i][0] = false;
+        }
+        dp[0][0] = true;
+        for (int i = 1; i <= sLen; i++) {
+            for (int j = 1; j <= pLen; j++) {
+                if (p.charAt(j - 1) == '*') {
+                    dp[i][j] = dp[i - 1][j - 1] || dp[i - 1][j] || dp[i][j - 1];
+                } else {
+                    dp[i][j] = dp[i - 1][j - 1] && isMatch(s.charAt(i - 1), p.charAt(j - 1));
+                }
             }
         }
 
-        int t = 0;
-        for (int i = 0; i < ans.size(); i++) {
-            int now = ans.get(i);
-            ans.set(i, (now + t) % 10);
-            t = (now + t) / 10;
-        }
+        // print(dp);
 
-        while (t != 0) {
-            ans.add(t % 10);
-            t /= 10;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        boolean flag = true;
-        for (int i = ans.size() - 1; i >= 0; i--) {
-            if (flag && ans.get(i) == 0) {
-                continue;
-            }
-            flag = false;
-            sb.append(ans.get(i));
-        }
-        return sb.toString().length() == 0 ? "0" : sb.toString();
+        return dp[sLen][pLen];
 
     }
 
-    private void insert(int index, int num, ArrayList<Integer> list) {
-        if (index == list.size()) {
-            list.add(num);
-        } else {
-            list.set(index, list.get(index) + num);
+    private boolean isMatch(char a, char b) {
+        return b == '?' || b == '*' || a == b;
+    }
+
+    private void print(boolean[][] arr) {
+        for (boolean[] booleans : arr) {
+            System.out.println(Arrays.toString(booleans));
         }
     }
 }
