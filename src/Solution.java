@@ -1,25 +1,33 @@
 class Solution {
 
-    public int jump(int[] nums) {
-        int n = nums.length;
-        int step = 0;
-        int nowMax = 0;
-        int nextMax = nums[0];
-        for (int i = 0; i < n; i++) {
-            if (nowMax >= nums.length - 1) {
-                return step;
-            }
-            nextMax = Math.max(nextMax, i + nums[i]);
-            if (i == nowMax) {
-                step++;
-                nowMax = nextMax;
-            }
-
-        }
-        return step;
+    public void rotate(int[][] matrix) {
+        convert1(matrix);
+        convert2(matrix);
     }
 
-    public static void main(String[] args) {
-        new Solution().jump(new int[]{1, 1, 1, 1});
+    // 对折
+    private void convert1(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                swap(matrix, i, j, j, i);
+            }
+        }
+    }
+
+    // 水平翻转
+    private void convert2(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < (n + 1) / 2; j++) {
+                swap(matrix, i, j, i, n - 1 - j);
+            }
+        }
+    }
+
+    private void swap(int[][] matrix, int x1, int y1, int x2, int y2) {
+        int t = matrix[x1][y1];
+        matrix[x1][y1] = matrix[x2][y2];
+        matrix[x2][y2] = t;
     }
 }
