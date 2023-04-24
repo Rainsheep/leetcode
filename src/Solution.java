@@ -1,52 +1,21 @@
 class Solution {
 
-    boolean[] rowFlag;
-    boolean[] colFlag;
-    boolean[] c1;
-    boolean[] c2;
-    int ans = 0;
-    int n;
-
-    public int totalNQueens(int n) {
-        rowFlag = new boolean[n];
-        colFlag = new boolean[n];
-        c1 = new boolean[2 * n];
-        c2 = new boolean[2 * n];
-        this.n = n;
-        dfs(0);
-
-        return ans;
-    }
-
-    private void dfs(int now) {
-        if (now == n) {
-            ans++;
-            return;
-        }
-        for (int i = 0; i < n; i++) {
-            if (check(now, i)) {
-                flag(now, i);
-                dfs(now + 1);
-                cleanFlag(now, i);
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for (int i = 0; i <= len1; i++) {
+            for (int j = 0; j <= len2; j++) {
+                if (i == 0 || j == 0) {
+                    dp[i][j] = Math.max(i, j);
+                    continue;
+                }
+                dp[i][j] = Math.min(Math.min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1), dp[i - 1][j] + 1);
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);
+                }
             }
         }
-    }
-
-    private void flag(int row, int col) {
-        rowFlag[row] = true;
-        colFlag[col] = true;
-        c1[row + col] = true;
-        c2[col - row + n] = true;
-    }
-
-    private void cleanFlag(int row, int col) {
-        rowFlag[row] = false;
-        colFlag[col] = false;
-        c1[row + col] = false;
-        c2[col - row + n] = false;
-    }
-
-    private boolean check(int row, int col) {
-        return !rowFlag[row] && !colFlag[col] && !c1[row + col] && !c2[col - row + n];
+        return dp[len1][len2];
     }
 }
