@@ -1,63 +1,53 @@
+import java.util.HashMap;
+import java.util.HashSet;
+
 class Solution {
 
-    public void setZeroes(int[][] matrix) {
-        boolean firstRowZero = false;
-        boolean firstColZero = false;
-        int m = matrix.length;
-        int n = matrix[0].length;
-
-        for (int i = 0; i < n; i++) {
-            if (matrix[0][i] == 0) {
-                firstRowZero = true;
-                break;
-            }
+    public String minWindow(String s, String t) {
+        int n = 52;
+        HashMap<Character, Integer> map = new HashMap<>();
+        HashSet<Character> set = new HashSet<>();
+        int begin = 0;
+        int end = 0;
+        String ans = "";
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            map.put(c, map.getOrDefault(c, 0) - 1);
+            set.add(c);
         }
 
-        for (int i = 0; i < m; i++) {
-            if (matrix[i][0] == 0) {
-                firstColZero = true;
-                break;
-            }
-        }
-
-        for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                if (matrix[i][j] == 0) {
-                    matrix[i][0] = 0;
-                    matrix[0][j] = 0;
+        for (int i = 0; i < s.length(); i++) {
+            // add
+            end = i + 1;
+            char c = s.charAt(i);
+            if (map.containsKey(c)) {
+                int newValue = map.get(c) + 1;
+                map.put(c, newValue);
+                if (newValue == 0) {
+                    set.remove(c);
                 }
             }
-        }
-
-        for (int i = 1; i < n; i++) {
-            if (matrix[0][i] == 0) {
-                for (int row = 1; row < m; row++) {
-                    matrix[row][i] = 0;
+            // from head delete
+            while (set.isEmpty()) {
+                // update result
+                if (ans.length() == 0 || end - begin < ans.length()) {
+                    ans = s.substring(begin, end);
                 }
 
-            }
-        }
-
-        for (int i = 1; i < m; i++) {
-            if (matrix[i][0] == 0) {
-                for (int col = 1; col < n; col++) {
-                    matrix[i][col] = 0;
+                char beginC = s.charAt(begin);
+                if (map.containsKey(beginC)) {
+                    int newValue = map.get(beginC) - 1;
+                    map.put(beginC, newValue);
+                    if (newValue == -1) {
+                        set.add(beginC);
+                    }
                 }
-
+                begin++;
             }
+
         }
 
-        if (firstRowZero) {
-            for (int i = 0; i < n; i++) {
-                matrix[0][i] = 0;
-            }
-        }
-
-        if (firstColZero) {
-            for (int i = 0; i < m; i++) {
-                matrix[i][0] = 0;
-            }
-        }
-
+        return ans;
     }
+
 }
