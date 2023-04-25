@@ -1,53 +1,34 @@
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 
 class Solution {
 
-    public String minWindow(String s, String t) {
-        int n = 52;
-        HashMap<Character, Integer> map = new HashMap<>();
-        HashSet<Character> set = new HashSet<>();
-        int begin = 0;
-        int end = 0;
-        String ans = "";
-        for (int i = 0; i < t.length(); i++) {
-            char c = t.charAt(i);
-            map.put(c, map.getOrDefault(c, 0) - 1);
-            set.add(c);
+    // [2,1,5,6,2,3]
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        Arrays.fill(right, n);
+
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!queue.isEmpty() && heights[i] < heights[queue.peek()]) {
+                Integer t = queue.poll();
+                right[t] = i;
+            }
+            left[i] = queue.isEmpty() ? -1 : queue.peek();
+            queue.push(i);
         }
 
-        for (int i = 0; i < s.length(); i++) {
-            // add
-            end = i + 1;
-            char c = s.charAt(i);
-            if (map.containsKey(c)) {
-                int newValue = map.get(c) + 1;
-                map.put(c, newValue);
-                if (newValue == 0) {
-                    set.remove(c);
-                }
-            }
-            // from head delete
-            while (set.isEmpty()) {
-                // update result
-                if (ans.length() == 0 || end - begin < ans.length()) {
-                    ans = s.substring(begin, end);
-                }
 
-                char beginC = s.charAt(begin);
-                if (map.containsKey(beginC)) {
-                    int newValue = map.get(beginC) - 1;
-                    map.put(beginC, newValue);
-                    if (newValue == -1) {
-                        set.add(beginC);
-                    }
-                }
-                begin++;
-            }
-
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans = Math.max((right[i] - left[i] - 1) * heights[i], ans);
         }
-
         return ans;
     }
 
+    public static void main(String[] args) {
+        new Solution().largestRectangleArea(new int[]{2, 1, 5, 6, 2, 3});
+    }
 }
