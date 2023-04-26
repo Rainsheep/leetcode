@@ -1,25 +1,52 @@
-class Solution {
+import java.util.ArrayList;
+import java.util.List;
 
-    public int numDecodings(String s) {
-        int[] dp = new int[s.length()];
-        for (int i = 0; i < s.length(); i++) {
-            dp[i] = 0;
-            if (check(String.valueOf(s.charAt(i)))) {
-                dp[i] = i == 0 ? 1 : dp[i - 1];
-            }
+class TreeNode {
 
-            if (i >= 1 && check(s.substring(i - 1, i + 1))) {
-                dp[i] += i == 1 ? 1 : dp[i - 2];
-            }
-        }
-        return dp[s.length() - 1];
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
     }
 
-    private boolean check(String s) {
-        if (s.startsWith("0")) {
-            return false;
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+class Solution {
+
+    public List<TreeNode> generateTrees(int n) {
+        return dfs(1, n);
+    }
+
+    private List<TreeNode> dfs(int begin, int end) {
+        ArrayList<TreeNode> treeNodes = new ArrayList<>();
+        if (begin > end) {
+            treeNodes.add(null);
+            return treeNodes;
         }
-        int num = Integer.parseInt(s);
-        return num >= 1 && num <= 26;
+
+        for (int i = begin; i <= end; i++) {
+            List<TreeNode> leftNodes = dfs(begin, i - 1);
+            List<TreeNode> rightNodes = dfs(i + 1, end);
+
+            for (TreeNode leftNode : leftNodes) {
+                for (TreeNode rightNode : rightNodes) {
+                    TreeNode root = new TreeNode(i);
+                    root.left = leftNode;
+                    root.right = rightNode;
+                    treeNodes.add(root);
+                }
+            }
+        }
+        return treeNodes;
     }
 }
