@@ -1,52 +1,25 @@
-import java.util.ArrayList;
-import java.util.List;
-
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(int val) {
-        this.val = val;
-    }
-
-    TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
 class Solution {
 
-    public List<TreeNode> generateTrees(int n) {
-        return dfs(1, n);
-    }
-
-    private List<TreeNode> dfs(int begin, int end) {
-        ArrayList<TreeNode> treeNodes = new ArrayList<>();
-        if (begin > end) {
-            treeNodes.add(null);
-            return treeNodes;
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if (s1.length() + s2.length() != s3.length()) {
+            return false;
         }
+        boolean[] dp = new boolean[s2.length() + 1];
 
-        for (int i = begin; i <= end; i++) {
-            List<TreeNode> leftNodes = dfs(begin, i - 1);
-            List<TreeNode> rightNodes = dfs(i + 1, end);
-
-            for (TreeNode leftNode : leftNodes) {
-                for (TreeNode rightNode : rightNodes) {
-                    TreeNode root = new TreeNode(i);
-                    root.left = leftNode;
-                    root.right = rightNode;
-                    treeNodes.add(root);
+        for (int i = 0; i <= s1.length(); i++) {
+            for (int j = 0; j <= s2.length(); j++) {
+                if (i == 0 && j == 0) {
+                    dp[j] = true;
+                } else if (i == 0) {
+                    dp[j] = dp[j - 1] && s2.charAt(j - 1) == s3.charAt(j - 1);
+                } else if (j == 0) {
+                    dp[j] = dp[j] && s1.charAt(i - 1) == s3.charAt(i - 1);
+                } else {
+                    dp[j] = dp[j] && s3.charAt(i + j - 1) == s1.charAt(i - 1);
+                    dp[j] = dp[j] || dp[j - 1] && s3.charAt(i + j - 1) == s2.charAt(j - 1);
                 }
             }
         }
-        return treeNodes;
+        return dp[s2.length()];
     }
 }
