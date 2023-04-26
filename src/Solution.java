@@ -1,33 +1,25 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 class Solution {
 
-    ArrayList<List<Integer>> ans = new ArrayList<>();
-    int[] nums;
+    public int numDecodings(String s) {
+        int[] dp = new int[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            dp[i] = 0;
+            if (check(String.valueOf(s.charAt(i)))) {
+                dp[i] = i == 0 ? 1 : dp[i - 1];
+            }
 
-    public List<List<Integer>> subsetsWithDup(int[] nums) {
-        Arrays.sort(nums);
-        this.nums = nums;
-        dfs(0, new LinkedList<>(), false);
-
-        return ans;
+            if (i >= 1 && check(s.substring(i - 1, i + 1))) {
+                dp[i] += i == 1 ? 1 : dp[i - 2];
+            }
+        }
+        return dp[s.length() - 1];
     }
 
-    private void dfs(int i, LinkedList<Integer> list, boolean last) {
-        if (i == nums.length) {
-            ans.add(new ArrayList<>(list));
-            return;
+    private boolean check(String s) {
+        if (s.startsWith("0")) {
+            return false;
         }
-        // no select
-        dfs(i + 1, list, false);
-        // select
-        if (last || i == 0 || nums[i] != nums[i - 1]) {
-            list.add(nums[i]);
-            dfs(i + 1, list, true);
-            list.removeLast();
-        }
+        int num = Integer.parseInt(s);
+        return num >= 1 && num <= 26;
     }
 }
