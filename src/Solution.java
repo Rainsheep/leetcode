@@ -1,17 +1,33 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 class Solution {
 
-    public List<Integer> grayCode(int n) {
-        ArrayList<Integer> ans = new ArrayList<>();
-        ans.add(0);
-        for (int i = 0; i < n; i++) {
-            ArrayList<Integer> t = new ArrayList<>(ans);
-            for (int j = t.size() - 1; j >= 0; j--) {
-                ans.add(t.get(j) + (1 << i));
-            }
-        }
+    ArrayList<List<Integer>> ans = new ArrayList<>();
+    int[] nums;
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        this.nums = nums;
+        dfs(0, new LinkedList<>(), false);
+
         return ans;
+    }
+
+    private void dfs(int i, LinkedList<Integer> list, boolean last) {
+        if (i == nums.length) {
+            ans.add(new ArrayList<>(list));
+            return;
+        }
+        // no select
+        dfs(i + 1, list, false);
+        // select
+        if (last || i == 0 || nums[i] != nums[i - 1]) {
+            list.add(nums[i]);
+            dfs(i + 1, list, true);
+            list.removeLast();
+        }
     }
 }
