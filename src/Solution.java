@@ -1,25 +1,40 @@
+import java.util.HashMap;
+
 class Solution {
 
-    public boolean isInterleave(String s1, String s2, String s3) {
-        if (s1.length() + s2.length() != s3.length()) {
-            return false;
-        }
-        boolean[] dp = new boolean[s2.length() + 1];
+    HashMap<Integer, Integer> parent;
 
-        for (int i = 0; i <= s1.length(); i++) {
-            for (int j = 0; j <= s2.length(); j++) {
-                if (i == 0 && j == 0) {
-                    dp[j] = true;
-                } else if (i == 0) {
-                    dp[j] = dp[j - 1] && s2.charAt(j - 1) == s3.charAt(j - 1);
-                } else if (j == 0) {
-                    dp[j] = dp[j] && s1.charAt(i - 1) == s3.charAt(i - 1);
-                } else {
-                    dp[j] = dp[j] && s3.charAt(i + j - 1) == s1.charAt(i - 1);
-                    dp[j] = dp[j] || dp[j - 1] && s3.charAt(i + j - 1) == s2.charAt(j - 1);
-                }
+    private void merge(int x, int y) {
+        int pa = find(x);
+        int pb = find(y);
+        if (pa < pb) {
+            parent.put(pb, pa);
+        } else {
+            parent.put(pa, pb);
+        }
+    }
+
+    private int find(int x) {
+        int p = parent.get(x) == x ? x : find(parent.get(x));
+        parent.put(x, p);
+        return p;
+    }
+
+    public int longestConsecutive(int[] nums) {
+        parent = new HashMap<>();
+        for (int num : nums) {
+            parent.put(num, num);
+        }
+
+        for (int num : nums) {
+            if (parent.containsKey(num - 1)) {
+                merge(num - 1, num);
             }
         }
-        return dp[s2.length()];
+        int ans = 0;
+        for (int num : nums) {
+            ans = Math.max(ans, num - find(num) + 1);
+        }
+        return ans;
     }
 }
