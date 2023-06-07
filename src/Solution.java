@@ -1,40 +1,66 @@
-import java.util.HashMap;
+class TreeNode {
+
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
 
 class Solution {
 
-    HashMap<Integer, Integer> parent;
+    public void recoverTree(TreeNode root) {
+        TreeNode p1 = null, p2 = null, pred = null, predTemp = null;
 
-    private void merge(int x, int y) {
-        int pa = find(x);
-        int pb = find(y);
-        if (pa < pb) {
-            parent.put(pb, pa);
-        } else {
-            parent.put(pa, pb);
-        }
-    }
+        while (root != null) {
+            if (root.left != null) {
+                predTemp = root.left;
+                while (predTemp.right != null && predTemp.right != root) {
+                    predTemp = predTemp.right;
+                }
 
-    private int find(int x) {
-        int p = parent.get(x) == x ? x : find(parent.get(x));
-        parent.put(x, p);
-        return p;
-    }
-
-    public int longestConsecutive(int[] nums) {
-        parent = new HashMap<>();
-        for (int num : nums) {
-            parent.put(num, num);
-        }
-
-        for (int num : nums) {
-            if (parent.containsKey(num - 1)) {
-                merge(num - 1, num);
+                if (predTemp.right == null) {
+                    predTemp.right = root;
+                    root = root.left;
+                } else {
+                    if (pred != null && root.val < pred.val) {
+                        if (p1 == null) {
+                            p1 = pred;
+                        }
+                        p2 = root;
+                    }
+                    pred = root;
+                    root = root.right;
+                    predTemp.right = null;
+                }
+            } else {
+                if (pred != null && root.val < pred.val) {
+                    if (p1 == null) {
+                        p1 = pred;
+                    }
+                    p2 = root;
+                }
+                pred = root;
+                root = root.right;
             }
         }
-        int ans = 0;
-        for (int num : nums) {
-            ans = Math.max(ans, num - find(num) + 1);
-        }
-        return ans;
+        swap(p1, p2);
+    }
+
+    public void swap(TreeNode x, TreeNode y) {
+        int tmp = x.val;
+        x.val = y.val;
+        y.val = tmp;
     }
 }
