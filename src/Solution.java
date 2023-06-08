@@ -20,47 +20,25 @@ class TreeNode {
 
 class Solution {
 
-    public void recoverTree(TreeNode root) {
-        TreeNode p1 = null, p2 = null, pred = null, predTemp = null;
-
-        while (root != null) {
-            if (root.left != null) {
-                predTemp = root.left;
-                while (predTemp.right != null && predTemp.right != root) {
-                    predTemp = predTemp.right;
-                }
-
-                if (predTemp.right == null) {
-                    predTemp.right = root;
-                    root = root.left;
-                } else {
-                    if (pred != null && root.val < pred.val) {
-                        if (p1 == null) {
-                            p1 = pred;
-                        }
-                        p2 = root;
-                    }
-                    pred = root;
-                    root = root.right;
-                    predTemp.right = null;
-                }
-            } else {
-                if (pred != null && root.val < pred.val) {
-                    if (p1 == null) {
-                        p1 = pred;
-                    }
-                    p2 = root;
-                }
-                pred = root;
-                root = root.right;
-            }
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
         }
-        swap(p1, p2);
-    }
+        TreeNode curr = root;
+        while (curr != null) {
+            if (curr.left != null) {
+                // 找到最后的结点
+                TreeNode lastNode = curr.left;
+                while (lastNode.right != null) {
+                    lastNode = lastNode.right;
+                }
 
-    public void swap(TreeNode x, TreeNode y) {
-        int tmp = x.val;
-        x.val = y.val;
-        y.val = tmp;
+                TreeNode t = curr.right;
+                curr.right = curr.left;
+                curr.left = null;
+                lastNode.right = t;
+            }
+            curr = curr.right;
+        }
     }
 }
