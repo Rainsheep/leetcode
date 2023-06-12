@@ -1,38 +1,15 @@
-
-class ListNode {
-
-    int val;
-    ListNode next;
-
-    ListNode(int x) {
-        val = x;
-        next = null;
-    }
-}
-
-public class Solution {
-
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        ListNode pA = headA, pB = headB;
-        while (true) {
-            if (pA == null && pB == null) {
-                return null;
+class Solution {
+    public int majorityElement(int[] nums) {
+        int count = 0;
+        int res = 0;
+        for (int num : nums) {
+            if (count == 0) {
+                res = num;
+                count = 1;
+                continue;
             }
-            if (pA == pB) {
-                return pA;
-            }
-            if (pA == null) {
-                pA = headB;
-            } else {
-                pA = pA.next;
-            }
-
-            if (pB == null) {
-                pB = headA;
-            } else {
-                pB = pB.next;
-            }
+            count += num == res ? 1 : -1;
         }
-
+        return res;
     }
 }
