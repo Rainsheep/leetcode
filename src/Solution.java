@@ -1,44 +1,39 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Random;
 
 class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        int[] outCount = new int[numCourses];
-        HashMap<Integer, HashSet<Integer>> map = new HashMap<>();
-        int count = 0;
+    public int findKthLargest(int[] nums, int k) {
+        return findKth(nums, nums.length - k, 0, nums.length);
+    }
 
-        for (int[] prerequisite : prerequisites) {
-            outCount[prerequisite[0]]++;
-            HashSet<Integer> set = map.computeIfAbsent(prerequisite[1], k -> new HashSet<>());
-            set.add(prerequisite[0]);
+    private int findKth(int[] num, int k, int l, int r) {
+        int index = randomPartition(num, l, r);
+        if (index == k) {
+            return num[index];
         }
+        return k > index ? findKth(num, k, index + 1, r) : findKth(num, k, l, index);
+    }
 
-        LinkedList<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < numCourses; i++) {
-            if (outCount[i] == 0) {
-                queue.add(i);
+    private int randomPartition(int[] num, int l, int r) {
+        int index = new Random().nextInt(r - l) + l;
+        swap(num, l, index);
+        return partition(num, l, r);
+    }
+
+    private int partition(int[] num, int l, int r) {
+        int x = num[l];
+        int k = l - 1;
+        for (int i = l; i < r; i++) {
+            if (num[i] <= x) {
+                swap(num, ++k, i);
             }
         }
+        swap(num, k, l);
+        return k;
+    }
 
-        while (true) {
-            if (queue.isEmpty()) {
-                return count == numCourses;
-            }
-
-            Integer head = queue.pop();
-            HashSet<Integer> set = map.get(head);
-            if (set != null && set.size() != 0) {
-                for (Integer num : set) {
-                    outCount[num]--;
-                    if (outCount[num] == 0) {
-                        queue.add(num);
-                    }
-                }
-            }
-            count++;
-
-        }
-
+    private void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
     }
 }
