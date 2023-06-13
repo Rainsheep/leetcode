@@ -1,18 +1,30 @@
+import java.util.LinkedList;
+
 class Solution {
-    public int[] productExceptSelf(int[] nums) {
-        int n = nums.length;
-        int[] res = new int[n];
-        for (int i = 0; i < n; i++) {
-            res[i] = i == 0 ? 1 : (res[i - 1] * nums[i - 1]);
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] ans = new int[nums.length - k + 1];
+        LinkedList<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < nums.length; i++) {
+
+            if (i < k) {
+                addToQueue(queue, nums, i);
+                continue;
+            }
+
+            ans[i - k] = nums[queue.getFirst()];
+            addToQueue(queue, nums, i);
+            if (queue.getFirst() == i - k) {
+                queue.removeFirst();
+            }
         }
+        ans[ans.length - 1] = nums[queue.getFirst()];
+        return ans;
+    }
 
-        int R = 1;
-        for (int i = n - 1; i >= 0; i--) {
-            res[i] = R * res[i];
-            R *= nums[i];
+    private void addToQueue(LinkedList<Integer> queue, int[] nums, int index) {
+        while (!queue.isEmpty() && nums[index] >= nums[queue.getLast()]) {
+            queue.removeLast();
         }
-
-        return res;
-
+        queue.add(index);
     }
 }
