@@ -1,39 +1,43 @@
-import java.util.Random;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 class Solution {
-    public int findKthLargest(int[] nums, int k) {
-        return findKth(nums, nums.length - k, 0, nums.length);
-    }
+    public int maximalSquare(char[][] matrix) {
+        int n = matrix[0].length;
+        int m = matrix.length;
+        int[][] num = new int[m][n];
 
-    private int findKth(int[] num, int k, int l, int r) {
-        int index = randomPartition(num, l, r);
-        if (index == k) {
-            return num[index];
-        }
-        return k > index ? findKth(num, k, index + 1, r) : findKth(num, k, l, index);
-    }
-
-    private int randomPartition(int[] num, int l, int r) {
-        int index = new Random().nextInt(r - l) + l;
-        swap(num, l, index);
-        return partition(num, l, r);
-    }
-
-    private int partition(int[] num, int l, int r) {
-        int x = num[l];
-        int k = l - 1;
-        for (int i = l; i < r; i++) {
-            if (num[i] <= x) {
-                swap(num, ++k, i);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                num[j][i] = matrix[j][i] == '1' ? ((j > 0 ? num[j - 1][i] : 0) + 1) : 0;
             }
         }
-        swap(num, k, l);
-        return k;
-    }
 
-    private void swap(int[] a, int i, int j) {
-        int temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
+        int ans = 0;
+        for (int i = 0; i < m; i++) {
+            int[] left = new int[n];
+            int[] right = new int[n];
+            Arrays.fill(right, n - 1);
+            LinkedList<Integer> queue = new LinkedList<>();
+            for (int j = 0; j < n; j++) {
+                while (!queue.isEmpty() && num[i][queue.getLast()] >= num[i][j]) {
+                    Integer index = queue.removeLast();
+                    right[index] = j - 1;
+                }
+
+                left[j] = queue.isEmpty() ? 0 : (queue.getLast() + 1);
+                queue.addLast(j);
+            }
+//            System.out.println(Arrays.toString(right));
+
+            for (int j = 0; j < n; j++) {
+                int width = right[j] - left[j] + 1;
+                int l = Math.min(width, num[i][j]);
+                ans = Math.max(ans, l * l);
+            }
+        }
+
+        return ans;
+
     }
 }
