@@ -1,19 +1,28 @@
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 class Solution {
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int m = matrix.length, n = matrix[0].length;
-        int x = 0, y = n - 1;
-        while (x < m && y >= 0) {
-            if (matrix[x][y] == target) {
-                return true;
+
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        int ans = 0;
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
+        for (int[] interval : intervals) {
+            while (!queue.isEmpty() && interval[0] >= queue.peek()) {
+                queue.poll();
             }
 
-            if (matrix[x][y] > target) {
-                y--;
-            } else {
-                x++;
-            }
-
+            queue.add(interval[1]);
+            ans = Math.max(ans, queue.size());
         }
-        return false;
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        int res = new Solution().minMeetingRooms(new int[][]{{0, 30}, {5, 10}, {15, 20}});
+        assert res == 2;
+        res = new Solution().minMeetingRooms(new int[][]{{7, 10}, {2, 4}});
+        assert res == 1;
     }
 }
