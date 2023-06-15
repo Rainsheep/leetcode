@@ -1,28 +1,27 @@
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
 
 class Solution {
+    int[] dp;
+    int n;
 
-    public int minMeetingRooms(int[][] intervals) {
-        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
-        int ans = 0;
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
-        for (int[] interval : intervals) {
-            while (!queue.isEmpty() && interval[0] >= queue.peek()) {
-                queue.poll();
-            }
+    public int numSquares(int n) {
+        this.n = n;
+        dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
 
-            queue.add(interval[1]);
-            ans = Math.max(ans, queue.size());
+        int t = (int) Math.sqrt(n);
+        for (int i = 1; i <= t; i++) {
+            multiPack(i * i, 1);
         }
-        return ans;
+        return dp[n];
     }
 
-    public static void main(String[] args) {
-        int res = new Solution().minMeetingRooms(new int[][]{{0, 30}, {5, 10}, {15, 20}});
-        assert res == 2;
-        res = new Solution().minMeetingRooms(new int[][]{{7, 10}, {2, 4}});
-        assert res == 1;
+
+    private void multiPack(int weight, int value) {
+        for (int i = weight; i <= n; i++) {
+            if (dp[i - weight] == Integer.MAX_VALUE) continue;
+            dp[i] = Math.min(dp[i], dp[i - weight] + value);
+        }
     }
 }
