@@ -1,27 +1,22 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class Solution {
-    int[] dp;
-    int n;
-
-    public int numSquares(int n) {
-        this.n = n;
-        dp = new int[n + 1];
-        Arrays.fill(dp, Integer.MAX_VALUE);
-        dp[0] = 0;
-
-        int t = (int) Math.sqrt(n);
-        for (int i = 1; i <= t; i++) {
-            multiPack(i * i, 1);
+    public int lengthOfLIS(int[] nums) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            if (list.isEmpty() || num > list.get(list.size() - 1)) {
+                list.add(num);
+            }
+            if (num == list.get(list.size() - 1)) {
+                continue;
+            }
+            int index = Collections.binarySearch(list, num);
+            if (index < 0) {
+                index = -index - 1;
+            }
+            list.set(index, num);
         }
-        return dp[n];
-    }
-
-
-    private void multiPack(int weight, int value) {
-        for (int i = weight; i <= n; i++) {
-            if (dp[i - weight] == Integer.MAX_VALUE) continue;
-            dp[i] = Math.min(dp[i], dp[i - weight] + value);
-        }
+        return list.size();
     }
 }
