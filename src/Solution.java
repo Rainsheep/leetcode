@@ -1,49 +1,13 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 class Solution {
-    int ans = 0;
-    HashSet<String> set = new HashSet<>();
-
-    public List<String> removeInvalidParentheses(String s) {
-        dfs(s, 0, 0, 0, new StringBuilder());
-        return new ArrayList<>(set);
-
-    }
-
-    private void dfs(String s, int index, int left, int right, StringBuilder sb) {
-        if (s.length() == index) {
-            if (left == right) {
-                if (sb.length() == ans) {
-                    set.add(sb.toString());
-                } else if (sb.length() > ans) {
-                    ans = sb.length();
-                    set.clear();
-                    set.add(sb.toString());
-                }
-            }
-            return;
+    public int maxProfit(int[] prices) {
+        int length = prices.length;
+        int[] buy = new int[length];
+        int[] sell = new int[length];
+        buy[0] = -prices[0];
+        for (int i = 1; i < length; i++) {
+            buy[i] = Math.max(buy[i - 1], (i > 1 ? sell[i - 2] : 0) - prices[i]);
+            sell[i] = Math.max(sell[i - 1], buy[i - 1] + prices[i]);
         }
-
-        char c = s.charAt(index);
-        if (c != '(' && c != ')') {
-            sb.append(c);
-            dfs(s, index + 1, left, right, sb);
-            sb.deleteCharAt(sb.length() - 1);
-        } else if (c == '(') {
-            sb.append(c);
-            dfs(s, index + 1, left + 1, right, sb);
-            sb.deleteCharAt(sb.length() - 1);
-        } else if (right < left) {
-            sb.append(c);
-            dfs(s, index + 1, left, right + 1, sb);
-            sb.deleteCharAt(sb.length() - 1);
-        }
-        dfs(s, index + 1, left, right, sb);
-    }
-
-    public static void main(String[] args) {
-        new Solution().removeInvalidParentheses(")(f");
+        return sell[length - 1];
     }
 }
