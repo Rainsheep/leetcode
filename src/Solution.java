@@ -1,21 +1,40 @@
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
 class Solution {
+    public int rob(TreeNode root) {
+        int[] res = dfs(root);
+        return Math.max(res[0], res[1]);
 
-    public int maxCoins(int[] nums) {
-        int[] val = new int[nums.length + 2];
-        System.arraycopy(nums, 0, val, 1, nums.length);
-        val[0] = val[val.length - 1] = 1;
-        int[][] dp = new int[val.length][val.length];
+    }
 
-        for (int i = val.length - 3; i >= 0; i--) {
-            for (int j = i + 2; j < val.length; j++) {
-                for (int k = i + 1; k < j; k++) {
-                    dp[i][j] = Math.max(dp[i][j], val[k] * val[i] * val[j] + dp[i][k] + dp[k][j]);
-                }
-            }
-
+    private int[] dfs(TreeNode root) {
+        if (root == null) {
+            return new int[]{0, 0};
         }
-        return dp[0][val.length - 1];
 
+        if (root.left == null && root.right == null) {
+            return new int[]{root.val, 0};
+        }
 
+        int[] left = dfs(root.left);
+        int[] right = dfs(root.right);
+        return new int[]{root.val + left[1] + right[1], Math.max(left[0], left[1]) + Math.max(right[0], right[1])};
     }
 }
