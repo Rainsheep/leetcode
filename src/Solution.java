@@ -1,13 +1,21 @@
 class Solution {
-    public int maxProfit(int[] prices) {
-        int length = prices.length;
-        int[] buy = new int[length];
-        int[] sell = new int[length];
-        buy[0] = -prices[0];
-        for (int i = 1; i < length; i++) {
-            buy[i] = Math.max(buy[i - 1], (i > 1 ? sell[i - 2] : 0) - prices[i]);
-            sell[i] = Math.max(sell[i - 1], buy[i - 1] + prices[i]);
+
+    public int maxCoins(int[] nums) {
+        int[] val = new int[nums.length + 2];
+        System.arraycopy(nums, 0, val, 1, nums.length);
+        val[0] = val[val.length - 1] = 1;
+        int[][] dp = new int[val.length][val.length];
+
+        for (int i = val.length - 3; i >= 0; i--) {
+            for (int j = i + 2; j < val.length; j++) {
+                for (int k = i + 1; k < j; k++) {
+                    dp[i][j] = Math.max(dp[i][j], val[k] * val[i] * val[j] + dp[i][k] + dp[k][j]);
+                }
+            }
+
         }
-        return sell[length - 1];
+        return dp[0][val.length - 1];
+
+
     }
 }
