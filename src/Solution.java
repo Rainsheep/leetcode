@@ -1,40 +1,24 @@
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(int val) {
-        this.val = val;
-    }
-
-    TreeNode(int val, TreeNode left, TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
-
 class Solution {
-    public int rob(TreeNode root) {
-        int[] res = dfs(root);
-        return Math.max(res[0], res[1]);
-
-    }
-
-    private int[] dfs(TreeNode root) {
-        if (root == null) {
-            return new int[]{0, 0};
+    public int[] countBits(int n) {
+        int len = n + 1;
+        int[] nums = new int[len];
+        nums[0] = 0;
+        int k = 1;
+        int r = 0;
+        while (k < len) {
+            int pow = (int) Math.pow(2, r);
+            for (int i = 0; i < pow && k < len; i++) {
+                if (i < pow / 2) {
+                    nums[k] = nums[k - pow / 2];
+                } else {
+                    nums[k] = nums[k - pow / 2] + 1;
+                }
+                k++;
+            }
+            r++;
         }
 
-        if (root.left == null && root.right == null) {
-            return new int[]{root.val, 0};
-        }
+        return nums;
 
-        int[] left = dfs(root.left);
-        int[] right = dfs(root.right);
-        return new int[]{root.val + left[1] + right[1], Math.max(left[0], left[1]) + Math.max(right[0], right[1])};
     }
 }
