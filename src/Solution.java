@@ -1,27 +1,16 @@
+import java.util.HashMap;
+
 class Solution {
-    int ans = 0;
-
-    public int findTargetSumWays(int[] nums, int target) {
-        int sum = 0;
+    public int subarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int ans = 0;
+        int preSum = 0;
         for (int num : nums) {
-            sum += num;
+            preSum += num;
+            ans += map.getOrDefault(preSum - k, 0);
+            map.put(preSum, map.getOrDefault(preSum, 0) + 1);
         }
-
-        sum -= target;
-        if (sum < 0 || sum % 2 != 0) {
-            return 0;
-        }
-        sum /= 2;
-
-        int[] dp = new int[sum + 1];
-        dp[0] = 1;
-        for (int num : nums) {
-            for (int i = sum; i >= num; i--) {
-                dp[i] += dp[i - num];
-            }
-        }
-        return dp[sum];
+        return ans;
     }
-
-
 }
