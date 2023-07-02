@@ -1,25 +1,31 @@
-import java.util.HashMap;
-
 class Solution {
-    public int leastInterval(char[] tasks, int n) {
-        int maxCount = 0;
-        int someCount = 0;
-        HashMap<Character, Integer> map = new HashMap<>();
-        for (char task : tasks) {
-            int count = map.getOrDefault(task, 0) + 1;
-            map.put(task, count);
-
-            if (count > maxCount) {
-                maxCount = count;
-                someCount = 1;
-            } else if (count == maxCount) {
-                someCount++;
-            }
-
-
+    public int countSubstrings(String s) {
+        int ans = 0;
+        for (int i = 0; i < s.length(); i++) {
+            ans += oddExd(i, s);
+            ans += evenExd(i, s);
         }
-        
-        int res = maxCount * (n + 1) - n + someCount - 1;
-        return Math.max(tasks.length, res);
+        return ans;
+    }
+
+    private int oddExd(int index, String s) {
+        int res = 1;
+        int left = index - 1;
+        return test(index, s, res, left);
+    }
+
+    private int evenExd(int index, String s) {
+        int res = 0;
+        return test(index, s, res, index);
+    }
+
+    private int test(int index, String s, int res, int left) {
+        int right = index + 1;
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            res++;
+            left--;
+            right++;
+        }
+        return res;
     }
 }
