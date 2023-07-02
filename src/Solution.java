@@ -1,31 +1,43 @@
+import java.util.ArrayList;
+
 class Solution {
+
     public int countSubstrings(String s) {
         int ans = 0;
-        for (int i = 0; i < s.length(); i++) {
-            ans += oddExd(i, s);
-            ans += evenExd(i, s);
+        s = wrapperStr(s);
+        int cid = -1, right = -1;
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        for (int i = 1; i < s.length() - 1; i++) {
+            int armLen = i <= right ? Math.min(list.get(2 * cid - i), right - i + 1) : 1;
+            while (s.charAt(i + armLen) == s.charAt(i - armLen)) {
+                armLen++;
+            }
+            list.add(armLen);
+
+            if (i + armLen - 1 > right) {
+                cid = i;
+                right = i + armLen - 1;
+            }
+
+            // System.out.println(i + " " + armLen / 2);
+            ans += armLen / 2;
         }
+
         return ans;
     }
 
-    private int oddExd(int index, String s) {
-        int res = 1;
-        int left = index - 1;
-        return test(index, s, res, left);
-    }
-
-    private int evenExd(int index, String s) {
-        int res = 0;
-        return test(index, s, res, index);
-    }
-
-    private int test(int index, String s, int res, int left) {
-        int right = index + 1;
-        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-            res++;
-            left--;
-            right++;
+    public String wrapperStr(String s) {
+        StringBuilder sb = new StringBuilder("^#");
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            sb.append("#");
         }
-        return res;
+        sb.append("$");
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Solution().countSubstrings("aba"));
     }
 }
