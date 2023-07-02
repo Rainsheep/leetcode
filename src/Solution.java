@@ -1,56 +1,25 @@
+import java.util.HashMap;
+
 class Solution {
-    public int findUnsortedSubarray(int[] nums) {
-        int left = -1;
-        int length = nums.length;
-        for (int i = 0; i < length - 1; i++) {
-            if (nums[i] > nums[i + 1]) {
-                left = i;
-                break;
-            }
-        }
-        if (left == -1) {
-            return 0;
-        }
+    public int leastInterval(char[] tasks, int n) {
+        int maxCount = 0;
+        int someCount = 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char task : tasks) {
+            int count = map.getOrDefault(task, 0) + 1;
+            map.put(task, count);
 
-        int right = -1;
-        for (int i = length - 1; i > 0; i--) {
-            if (nums[i] < nums[i - 1]) {
-                right = i;
-                break;
+            if (count > maxCount) {
+                maxCount = count;
+                someCount = 1;
+            } else if (count == maxCount) {
+                someCount++;
             }
-        }
 
-        int min = left;
-        int max = left;
-        for (int i = left; i <= right; i++) {
-            if (nums[i] < nums[min]) {
-                min = i;
-            }
-            if (nums[i] > nums[max]) {
-                max = i;
-            }
-        }
-        int leftIndex = left;
 
-        for (int i = left; i >= 0; i--) {
-            if (nums[i] > nums[min]) {
-                leftIndex--;
-            } else {
-                break;
-            }
         }
-
-        int rightIndex = right;
-        for (int i = right; i < length; i++) {
-            if (nums[i] < nums[max]) {
-                rightIndex++;
-            } else {
-                break;
-            }
-        }
-
-        return rightIndex - leftIndex + 1;
+        
+        int res = maxCount * (n + 1) - n + someCount - 1;
+        return Math.max(tasks.length, res);
     }
-
-
 }
