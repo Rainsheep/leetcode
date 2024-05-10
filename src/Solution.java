@@ -1,25 +1,23 @@
+import java.util.LinkedList;
+
 class Solution {
     public int longestValidParentheses(String s) {
+        LinkedList<Integer> list = new LinkedList<>();
+        list.push(-1);
         int res = 0;
-        int left = 0;
-        int right = 0;
-
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c == '(') {
-                left++;
+            if (s.charAt(i) == '(') {
+                list.push(i);
             } else {
-                right++;
-            }
+                list.pop();
+                if (list.isEmpty()) {
+                    list.push(i);
+                } else {
+                    res = Math.max(res, i - list.peek());
+                }
 
-            if (left >= right) {
-                res = Math.max(res, right * 2);
-            } else {
-                left = 0;
-                right = 0;
             }
         }
         return res;
-
     }
 }
