@@ -1,23 +1,22 @@
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-class Solution {
-    public int longestValidParentheses(String s) {
-        LinkedList<Integer> list = new LinkedList<>();
-        list.push(-1);
-        int res = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                list.push(i);
-            } else {
-                list.pop();
-                if (list.isEmpty()) {
-                    list.push(i);
-                } else {
-                    res = Math.max(res, i - list.peek());
-                }
+class LRUCache extends LinkedHashMap<Integer, Integer> {
 
-            }
-        }
-        return res;
+    int capacity;
+
+    public LRUCache(int capacity) {
+        super(capacity, 0.75F, true);
+        this.capacity = capacity;
+
+    }
+
+    public int get(int key) {
+        return getOrDefault(key, -1);
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+        return size() > capacity;
     }
 }
