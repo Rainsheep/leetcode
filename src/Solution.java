@@ -1,13 +1,22 @@
 class Solution {
-    public ListNode swapPairs(ListNode head) {
-        if (head == null || head.next == null) return head;
+    boolean flag = true;
 
-        ListNode next = head.next;
-        ListNode lastNode = head.next.next;
-        head.next.next = head;
-        head.next = swapPairs(lastNode);
+    public boolean isBalanced(TreeNode root) {
+        dfs(root);
+        return flag;
+    }
 
-        return next;
+    private int dfs(TreeNode root) {
+        if (root == null || !flag) {
+            return 0;
+        }
 
+        int left = dfs(root.left);
+        int right = dfs(root.right);
+        if (Math.abs(left - right) > 1) {
+            flag = false;
+        }
+
+        return Math.max(left, right) + 1;
     }
 }
