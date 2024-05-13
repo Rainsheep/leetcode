@@ -1,12 +1,6 @@
 class Solution {
-    public TreeNode invertTree(TreeNode root) {
-        if (root == null) return null;
-
-        TreeNode t;
-        t = root.left;
-        root.left = invertTree(root.right);
-        root.right = invertTree(t);
-        return root;
-
+    public int maxDepth(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
     }
 }
