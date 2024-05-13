@@ -1,18 +1,13 @@
 class Solution {
-    int ans = 0;
+    public ListNode swapPairs(ListNode head) {
+        if (head == null || head.next == null) return head;
 
-    public int findTargetSumWays(int[] nums, int target) {
-        dfs(nums, target, 0, 0);
-        return ans;
-    }
+        ListNode next = head.next;
+        ListNode lastNode = head.next.next;
+        head.next.next = head;
+        head.next = swapPairs(lastNode);
 
-    private void dfs(int[] nums, int target, int sum, int index) {
-        if (index == nums.length) {
-            ans += (sum == target) ? 1 : 0;
-            return;
-        }
+        return next;
 
-        dfs(nums, target, sum + nums[index], index + 1);
-        dfs(nums, target, sum - nums[index], index + 1);
     }
 }
