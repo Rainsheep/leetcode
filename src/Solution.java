@@ -1,22 +1,38 @@
-class Solution {
-    boolean flag = true;
+import java.util.Random;
 
-    public boolean isBalanced(TreeNode root) {
-        dfs(root);
-        return flag;
+class Solution {
+    public int[] sortArray(int[] nums) {
+        quickSort(nums, 0, nums.length - 1);
+        return nums;
     }
 
-    private int dfs(TreeNode root) {
-        if (root == null || !flag) {
-            return 0;
+    private void quickSort(int[] nums, int low, int high) {
+        if (low < high) {
+            int k = partition(nums, low, high);
+            quickSort(nums, low, k - 1);
+            quickSort(nums, k + 1, high);
         }
+    }
 
-        int left = dfs(root.left);
-        int right = dfs(root.right);
-        if (Math.abs(left - right) > 1) {
-            flag = false;
+    private int partition(int[] nums, int low, int high) {
+        int random = new Random().nextInt(high - low);
+        swap(nums, low, low + random);
+        int x = nums[low];
+        int k = low - 1;
+        for (int i = low; i <= high; i++) {
+            if (nums[i] <= x) {
+                swap(nums, i, ++k);
+            }
         }
+        swap(nums, k, low);
+        return k;
+    }
 
-        return Math.max(left, right) + 1;
+    private void swap(int[] nums, int i, int j) {
+        if (i != j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
     }
 }
