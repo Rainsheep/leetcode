@@ -1,26 +1,13 @@
+import java.util.StringJoiner;
+
 class Solution {
-    public String reverseOnlyLetters(String s) {
-        char[] chars = s.toCharArray();
-        int left = 0;
-        int right = chars.length - 1;
-        while (left < right) {
-            while (left < right && !Character.isLetter(chars[left])) {
-                left++;
-            }
-
-            while (left < right && !Character.isLetter(chars[right])) {
-                right--;
-            }
-            swap(chars, left++, right--);
+    public String reverseWords(String s) {
+        s = s.trim();
+        String[] split = s.split("\\s+");
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        for (int i = split.length - 1; i >= 0; i--) {
+            stringJoiner.add(split[i]);
         }
-
-        return new String(chars);
-
-    }
-
-    private void swap(char[] chars, int i, int j) {
-        char temp = chars[i];
-        chars[i] = chars[j];
-        chars[j] = temp;
+        return stringJoiner.toString();
     }
 }
