@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 class Solution {
     public int[] nextLargerNodes(ListNode head) {
@@ -8,22 +9,20 @@ class Solution {
             head = head.next;
         }
 
+        LinkedList<Integer> stack = new LinkedList<>();
         int[] ans = new int[list.size()];
 
         for (int i = 0; i < list.size(); i++) {
-
-            if (i > 0 && list.get(i) <= list.get(i - 1)) {
-                ans[i] = ans[i - 1];
-            }
-
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(j) > list.get(i)) {
-                    ans[i] = list.get(j);
-                    break;
+            if (stack.isEmpty() || list.get(i) <= list.get(stack.peek())) {
+                stack.push(i);
+            } else {
+                while (!stack.isEmpty() && list.get(i) > list.get(stack.peek())) {
+                    Integer index = stack.pop();
+                    ans[index] = list.get(i);
                 }
+                stack.push(i);
             }
         }
-
 
         return ans;
 
